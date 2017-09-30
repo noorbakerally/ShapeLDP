@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class NonContainerMap implements HasResourceMap{
     String IRI;
+    ContainerMap parentContainerMap;
     Map<String,ResourceMap> resourceMaps = new HashMap<String, ResourceMap>();
 
     public NonContainerMap(String IRI) {
@@ -50,5 +51,13 @@ public class NonContainerMap implements HasResourceMap{
 
     public void setResourceMaps(Map<String, ResourceMap> resourceMaps) {
         this.resourceMaps = resourceMaps;
+    }
+
+    public ContainerMap getParentContainerMap() {
+        return parentContainerMap;
+    }
+
+    public void setParentContainerMap(ContainerMap parentContainerMap) {
+        this.parentContainerMap = parentContainerMap;
     }
 }

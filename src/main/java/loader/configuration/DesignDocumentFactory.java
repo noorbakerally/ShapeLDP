@@ -61,11 +61,21 @@ public class DesignDocumentFactory {
         for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
             ContainerMap containerMap = containerMapEntry.getValue();
             loadContainerMap(containerMap);
+            if (containerMap.getParentContainerMap() == null){
+                designDocument.addContainerMap(containerMap);
+            }
+
+        }
+
+        for (Map.Entry <String,NonContainerMap> nonContainerMapEntry:nonContainerMaps.entrySet()){
+            NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
+            if (nonContainerMap.getParentContainerMap() == null){
+                designDocument.addNonContainerMap(nonContainerMap);
+            }
+
         }
 
 
-
-        designDocument.setContainerMaps(containerMaps);
 
         return designDocument;
     }

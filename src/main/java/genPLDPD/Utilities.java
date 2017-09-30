@@ -31,4 +31,8 @@ public class Utilities {
         }
         return dsf;
     }
+
+    String genIRI(String contIRI, Dataset ds, String base, String res){
+        return base+"?"+res;
+    }
 }

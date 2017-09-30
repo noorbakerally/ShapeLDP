@@ -54,6 +54,7 @@ public class ContainerMap implements HasResourceMap {
 
     public void addNonContainerMap(NonContainerMap nonContainerMap){
         nonContainerMaps.put(nonContainerMap.getIRI(),nonContainerMap);
+        nonContainerMap.setParentContainerMap(this);
     }
 
     public void addContainerMap(ContainerMap containerMap){

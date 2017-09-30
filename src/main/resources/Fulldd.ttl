@@ -1,0 +1,31 @@
+@prefix :     <http://opensensingcity.emse.fr/LDPDesignVocabulary/> .
+@prefix data:     <http://opensensingcity.emse.fr/LDPDesign/data/> .
+
+data:catalogCM a :ContainerMap;
+    :resourceMap data:catalogRM;
+    :containerMap data:datasetCM .
+
+data:datasetCM a :ContainerMap;
+    :resourceMap data:datasetRM;
+    :nonContainerMap data:distributionNM .
+
+data:distributionNM a :NonContainerMap;
+    :resourceMap data:distributionRM .
+
+data:catalogRM a :ResourceMap;
+    :resourceQuery "{ ?res a dcat:Catalog .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:dataset)) }";
+    :dataSource data:DataSource1 .
+
+data:datasetRM a :ResourceMap;
+    :resourceQuery "{ ?pres dcat:dataset ?res .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:distribution)) }";
+    :dataSource data:DataSource1 .
+
+data:distributionRM a :ResourceMap;
+    :resourceQuery "{?pres dcat:distribution ?res .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
+    :dataSource data:DataSource1 .
+
+data:DataSource1 a :DataSource;
+    :location "https://opendata.paris.fr/api/v2/catalog/exports/ttl" .

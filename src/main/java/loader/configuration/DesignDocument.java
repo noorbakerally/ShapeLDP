@@ -27,4 +27,13 @@ public class DesignDocument {
     }
 
 
+    public void addContainerMap(ContainerMap containerMap){
+        containerMaps.put(containerMap.getIRI(),containerMap);
+    }
+
+    public void addNonContainerMap(NonContainerMap nonContainerMap){
+        nonContainerMaps.put(nonContainerMap.getIRI(),nonContainerMap);
+    }
+
+
 }
