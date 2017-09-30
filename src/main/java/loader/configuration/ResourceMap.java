@@ -76,4 +76,12 @@ public class ResourceMap {
         }
         return str;
     }
+
+    public Map<String, DataSource> getDataSources() {
+        return dataSources;
+    }
+
+    public void setDataSources(Map<String, DataSource> dataSources) {
+        this.dataSources = dataSources;
+    }
 }

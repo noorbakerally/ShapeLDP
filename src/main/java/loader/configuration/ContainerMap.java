@@ -79,4 +79,12 @@ public class ContainerMap implements HasResourceMap {
         }
         return str;
     }
+
+    public Map<String, ResourceMap> getResourceMaps() {
+        return resourceMaps;
+    }
+
+    public void setResourceMaps(Map<String, ResourceMap> resourceMaps) {
+        this.resourceMaps = resourceMaps;
+    }
 }

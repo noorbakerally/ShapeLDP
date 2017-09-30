@@ -24,7 +24,8 @@ data:datasetRM a :ResourceMap;
 
 data:distributionRM a :ResourceMap;
     :resourceQuery "{?pres dcat:distribution ?res .}";
-    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }" .
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
+    :dataSource data:DataSource1 .
 
 data:DataSource1 a :DataSource;
     :location "https://opendata.paris.fr/api/v2/catalog/exports/ttl" .

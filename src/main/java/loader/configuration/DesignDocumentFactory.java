@@ -75,11 +75,24 @@ public class DesignDocumentFactory {
         setContainerMaps(containerMap);
         setNonContainerMaps(containerMap);
         setResourceMaps(containerMap);
-        System.out.println("test");
+
+        //load resource map datasources
+        for (Map.Entry <String, ResourceMap> resourceMapEntry:containerMap.getResourceMaps().entrySet()){
+            ResourceMap resourceMap = resourceMapEntry.getValue();
+            setDataSources(resourceMap);
+            System.out.println(resourceMap);
+        }
+
     }
 
     static void loadNonContainerMap(NonContainerMap nonContainerMap){
         setResourceMaps(nonContainerMap);
+
+        //load resource map datasources
+        for (Map.Entry <String, ResourceMap> resourceMapEntry:nonContainerMap.getResourceMaps().entrySet()){
+            ResourceMap resourceMap = resourceMapEntry.getValue();
+            setDataSources(resourceMap);
+        }
     }
 
     static void setContainerMaps(ContainerMap containerMap){
@@ -125,6 +138,35 @@ public class DesignDocumentFactory {
         }
     }
 
+
+    static void setDataSources(ResourceMap resourceMap){
+        String dataSourceQuery = "SELECT DISTINCT * \n" +
+                "WHERE { " +
+                "<"+resourceMap.getIRI()+"> :dataSource ?dataSourceIRI . "+
+                "?dataSourceIRI ?p ?o ." +
+                "}";
+        ResultSet rs = Global.exeQuery(dataSourceQuery, model);
+        //System.out.println(ResultSetFormatter.asText(rs));
+
+        while (rs.hasNext()) {
+            QuerySolution qs = rs.next();
+            String p = qs.get("?p").toString();
+            String o = qs.get("?o").toString();
+            String dataSourceIRI = qs.get("?dataSourceIRI").toString();
+
+            DataSource dataSource = resourceMap.getDataSources().get(dataSourceIRI);
+
+            if (dataSource == null){
+                dataSource = new DataSource(dataSourceIRI);
+                resourceMap.getDataSources().put(dataSourceIRI,dataSource);
+            }
+
+            if (Global.getVTerm("location").equals(p)) {
+                dataSource.setLocation(o);
+            }
+        }
+
+    }
     static void setResourceMaps(HasResourceMap sourceMap){
         String ResourceMapQuery = "SELECT DISTINCT * \n" +
                 "WHERE { <"+sourceMap.getIRI()+"> a ?sourceMapType . " +
@@ -163,8 +205,9 @@ public class DesignDocumentFactory {
             if (nonContainerMaps.containsKey(sourceMap.getIRI())){
                 nonContainerMaps.get(sourceMap.getIRI()).addResourceMap(resourceMap);
             }
-
         }
+
+
     }
 
 
