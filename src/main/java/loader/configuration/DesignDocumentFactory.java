@@ -80,7 +80,6 @@ public class DesignDocumentFactory {
         for (Map.Entry <String, ResourceMap> resourceMapEntry:containerMap.getResourceMaps().entrySet()){
             ResourceMap resourceMap = resourceMapEntry.getValue();
             setDataSources(resourceMap);
-            System.out.println(resourceMap);
         }
 
     }
