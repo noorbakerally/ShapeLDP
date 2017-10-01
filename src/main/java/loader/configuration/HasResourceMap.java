@@ -7,5 +7,6 @@ public interface HasResourceMap {
     public String getIRI();
     public void addResourceMap(ResourceMap resourceMap);
     public ResourceMap getResourceMap(String IRI);
+    public Global.LDPRType getType();
 }
 

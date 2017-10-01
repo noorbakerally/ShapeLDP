@@ -2,6 +2,7 @@ import loader.configuration.ContainerMap;
 import loader.configuration.DesignDocument;
 import loader.configuration.DesignDocumentFactory;
 import loader.configuration.NonContainerMap;
+import tests.Test1;
 
 import java.io.File;
 import java.util.Map;
@@ -11,6 +12,8 @@ import java.util.Map;
  */
 public class main {
     public static void main(String [] args){
+
+        /*
         ClassLoader classLoader = main.class.getClassLoader();
         File file = new File(classLoader.getResource("designdocument.ttl").getFile());
         //File file = new File(classLoader.getResource("Fulldd.ttl").getFile());
@@ -18,5 +21,10 @@ public class main {
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath());
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
+        */
+
+        Test1 t1 = new Test1();
+
+
     }
 }

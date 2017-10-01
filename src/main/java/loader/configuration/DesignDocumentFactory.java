@@ -166,7 +166,7 @@ public class DesignDocumentFactory {
             DataSource dataSource = resourceMap.getDataSources().get(dataSourceIRI);
 
             if (dataSource == null){
-                dataSource = new DataSource(dataSourceIRI);
+                dataSource = new RDFFileDataSource(dataSourceIRI);
                 resourceMap.getDataSources().put(dataSourceIRI,dataSource);
             }
 

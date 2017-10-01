@@ -31,6 +31,11 @@ public class NonContainerMap implements HasResourceMap{
     public ResourceMap getResourceMap(String currentRMIRI) {
         return resourceMaps.get(currentRMIRI);
     }
+
+    public Global.LDPRType getType() {
+        return Global.LDPRType.RDFSource;
+    }
+
     public String toString(int level) {
         String str = "";
         String tab= StringUtils.repeat("\t", level);
