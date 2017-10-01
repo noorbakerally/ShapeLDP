@@ -8,6 +8,7 @@ import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 
 import java.util.*;
@@ -95,6 +96,11 @@ public class Evaluation {
             Model newModel = ModelFactory.createDefaultModel();
             newModel = newModel.add(ResourceFactory.createResource(newIRI),
                     RDF.type,ResourceFactory.createResource(Global.getLDPRTypeIRI(parentMap.getType())));
+
+            //temporary, to replace with graph patterns from parentMap
+            newModel = newModel.add(ResourceFactory.createResource(newIRI),
+                    FOAF.primaryTopic,ResourceFactory.createResource(currentResourceIRI));
+
             dtNew.addNamedModel(newIRI,currentResource.getModel().union(newModel));
 
 
