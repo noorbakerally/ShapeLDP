@@ -89,6 +89,6 @@ public class ContainerMap implements HasResourceMap {
         this.resourceMaps = resourceMaps;
     }
     public Global.LDPRType getType() {
-        return Global.LDPRType.RDFSource;
+        return Global.LDPRType.Basic;
     }
 }

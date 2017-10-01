@@ -3,6 +3,8 @@ import loader.configuration.DesignDocument;
 import loader.configuration.DesignDocumentFactory;
 import loader.configuration.NonContainerMap;
 import tests.Test1;
+import tests.Test2;
+import tests.Test3;
 
 import java.io.File;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class main {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         */
 
-        Test1 t1 = new Test1();
+        Test3 t1 = new Test3();
 
 
     }

@@ -3,6 +3,7 @@ package genPLDPD;
 import ldp.Container;
 import ldp.RDFResource;
 import loader.configuration.*;
+import org.apache.jena.atlas.lib.ListUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QuerySolution;
@@ -27,15 +28,21 @@ public class Evaluation {
             NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
 
 
-
         }
         return ldpDD;
     }
 
-    public static Dataset evalNM(NonContainerMap nonContainerMap, String contIRI,String pResIRI, Dataset ds){
-        Dataset df = DatasetFactory.create();
-
-        return df;
+    public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,RDFResource relatedResource, Dataset ds){
+        Dataset dt = DatasetFactory.create();
+        List <GenID> genIDS = new ArrayList<GenID>();
+        for (Map.Entry <String,ResourceMap> resourceMapEntry:nonContainerMap.getResourceMaps().entrySet()){
+            ResourceMap currentResourceMap = resourceMapEntry.getValue();
+            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container, relatedResource, Utilities.mergeDataSet(dt, ds));
+            dt = Utilities.mergeDataSet(dt,evalResult.getDs());
+            genIDS.addAll(evalResult.getGenIDs());
+        }
+        EvalResult evalResult = new EvalResult(genIDS,dt);
+        return evalResult;
     }
 
     public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, RDFResource relatedResource, Dataset ds){
@@ -94,8 +101,9 @@ public class Evaluation {
 
             //add type iri here
             Model newModel = ModelFactory.createDefaultModel();
+            String newType = Global.getLDPRTypeIRI(parentMap.getType());
             newModel = newModel.add(ResourceFactory.createResource(newIRI),
-                    RDF.type,ResourceFactory.createResource(Global.getLDPRTypeIRI(parentMap.getType())));
+                    RDF.type,ResourceFactory.createResource(newType));
 
             //temporary, to replace with graph patterns from parentMap
             newModel = newModel.add(ResourceFactory.createResource(newIRI),
