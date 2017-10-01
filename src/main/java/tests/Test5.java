@@ -26,7 +26,6 @@ public class Test5 {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
 
         Dataset ds = Evaluation.evalDD(dd,base);
-
         RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
 
 

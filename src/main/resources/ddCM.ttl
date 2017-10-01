@@ -5,9 +5,17 @@ data:catalogCM a :ContainerMap;
     :resourceMap data:catalogRM;
     :containerMap data:datasetCM .
 
+data:datasetCM a :ContainerMap;
+    :resourceMap data:datasetRM .
+
 data:catalogRM a :ResourceMap;
-    :resourceQuery "{ ?res a dcat:Catalog .}";
+    :resourceQuery "{ ?res a dcat:Catalog .} LIMIT 1";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:dataset)) }";
+    :dataSource data:DataSource1 .
+
+data:datasetRM a :ResourceMap;
+    :resourceQuery "{ ?pres dcat:dataset ?res .} LIMIT 3";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:distribution)) }";
     :dataSource data:DataSource1 .
 
 data:DataSource1 a :DataSource;

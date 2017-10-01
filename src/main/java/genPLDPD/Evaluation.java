@@ -9,6 +9,8 @@ import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 
@@ -73,6 +75,7 @@ public class Evaluation {
         return new EvalResult(genIDS,dt);
 
     }
+
     public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,RDFResource relatedResource, Dataset ds){
         Dataset dt = DatasetFactory.create();
         List <GenID> genIDS = new ArrayList<GenID>();
@@ -165,7 +168,11 @@ public class Evaluation {
             Resource newLDPResource = ResourceFactory.createResource(newIRI);
             modelCont = modelCont.add(containerResource,contains,newLDPResource);
             dtContainer.addNamedModel(container.getIRI(),modelCont);
+            //RDFDataMgr.write(System.out, dtContainer, Lang.TRIG) ;
+
             dt = Utilities.mergeDataSet(dt,dtContainer);
+            //RDFDataMgr.write(System.out, dt, Lang.TRIG) ;
+
             genIDts.add(new GenID(newIRI,currentResourceIRI));
         }
         return new EvalResult(genIDts,dt);
