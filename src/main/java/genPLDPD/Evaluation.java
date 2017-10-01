@@ -23,6 +23,15 @@ public class Evaluation {
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
+        Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
+
+        for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
+            String iri = containerMapEntry.getKey();
+            ContainerMap containerMap = containerMapEntry.getValue();
+            EvalResult evalResult = evalCM(containerMap, new Container(base), null, ldpDD);
+            ldpDD = Utilities.mergeDataSet(ldpDD,evalResult.getDs());
+        }
+
         for (Map.Entry <String,NonContainerMap> nonContainerMapEntry:nonContainerMaps.entrySet()){
             String iri = nonContainerMapEntry.getKey();
             NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
@@ -32,6 +41,38 @@ public class Evaluation {
         return ldpDD;
     }
 
+    public static EvalResult evalCM(ContainerMap containerMap, Container container,RDFResource relatedResource, Dataset ds){
+        Dataset dt = DatasetFactory.create();
+        List <GenID> genIDS = new ArrayList<GenID>();
+        for (Map.Entry <String,ResourceMap> resourceMapEntry:containerMap.getResourceMaps().entrySet()){
+            ResourceMap currentResourceMap = resourceMapEntry.getValue();
+            Dataset tempDS = Utilities.mergeDataSet(dt, ds);
+            EvalResult evalResult = evalRM(currentResourceMap, containerMap, container, relatedResource, tempDS);
+            dt = Utilities.mergeDataSet(dt,evalResult.getDs());
+            genIDS.addAll(evalResult.getGenIDs());
+        }
+        for (GenID genID:genIDS){
+            String newIRI = genID.getLdprIRI();
+            String resourceIRI = genID.getRdfResourceIRI();
+
+            for (Map.Entry <String,NonContainerMap> ncmEntry:containerMap.getNonContainerMaps().entrySet()){
+                String ncmIRI = ncmEntry.getKey();
+                NonContainerMap ncm = ncmEntry.getValue();
+                EvalResult evalResult = evalNM(ncm, new Container(newIRI), new RDFResource(resourceIRI), Utilities.mergeDataSet(ds, dt));
+                dt = Utilities.mergeDataSet(dt,evalResult.getDs());
+            }
+
+            for (Map.Entry <String,ContainerMap> cmEntry:containerMap.getContainerMaps().entrySet()){
+                String cmIRI = cmEntry.getKey();
+                ContainerMap cm = cmEntry.getValue();
+                EvalResult evalResult = evalCM(cm, new Container(newIRI), new RDFResource(resourceIRI), Utilities.mergeDataSet(ds, dt));
+                dt = Utilities.mergeDataSet(dt,evalResult.getDs());
+            }
+
+        }
+        return new EvalResult(genIDS,dt);
+
+    }
     public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,RDFResource relatedResource, Dataset ds){
         Dataset dt = DatasetFactory.create();
         List <GenID> genIDS = new ArrayList<GenID>();
@@ -136,6 +177,22 @@ public class Evaluation {
 
         public GenID(String ldprIRI, String rdfResourceIRI) {
             this.ldprIRI = ldprIRI;
+            this.rdfResourceIRI = rdfResourceIRI;
+        }
+
+        public String getLdprIRI() {
+            return ldprIRI;
+        }
+
+        public void setLdprIRI(String ldprIRI) {
+            this.ldprIRI = ldprIRI;
+        }
+
+        public String getRdfResourceIRI() {
+            return rdfResourceIRI;
+        }
+
+        public void setRdfResourceIRI(String rdfResourceIRI) {
             this.rdfResourceIRI = rdfResourceIRI;
         }
     }

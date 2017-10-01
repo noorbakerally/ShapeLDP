@@ -91,4 +91,20 @@ public class ContainerMap implements HasResourceMap {
     public Global.LDPRType getType() {
         return Global.LDPRType.Basic;
     }
+
+    public Map<String, ContainerMap> getContainerMaps() {
+        return containerMaps;
+    }
+
+    public void setContainerMaps(Map<String, ContainerMap> containerMaps) {
+        this.containerMaps = containerMaps;
+    }
+
+    public Map<String, NonContainerMap> getNonContainerMaps() {
+        return nonContainerMaps;
+    }
+
+    public void setNonContainerMaps(Map<String, NonContainerMap> nonContainerMaps) {
+        this.nonContainerMaps = nonContainerMaps;
+    }
 }
