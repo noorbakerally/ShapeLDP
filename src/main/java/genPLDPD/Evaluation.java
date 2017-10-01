@@ -19,15 +19,15 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
+
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
-
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         for (Map.Entry <String,NonContainerMap> nonContainerMapEntry:nonContainerMaps.entrySet()){
             String iri = nonContainerMapEntry.getKey();
             NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
-
-
+            EvalResult evalResult = evalNM(nonContainerMap, new Container(base), null, ldpDD);
+            ldpDD = Utilities.mergeDataSet(ldpDD,evalResult.getDs());
         }
         return ldpDD;
     }
@@ -37,7 +37,8 @@ public class Evaluation {
         List <GenID> genIDS = new ArrayList<GenID>();
         for (Map.Entry <String,ResourceMap> resourceMapEntry:nonContainerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
-            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container, relatedResource, Utilities.mergeDataSet(dt, ds));
+            Dataset tempDS = Utilities.mergeDataSet(dt, ds);
+            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container, relatedResource, tempDS);
             dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             genIDS.addAll(evalResult.getGenIDs());
         }

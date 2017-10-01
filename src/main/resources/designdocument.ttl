@@ -5,7 +5,7 @@ data:distributionNM a :NonContainerMap;
     :resourceMap data:distributionRM .
 
 data:distributionRM a :ResourceMap;
-    :resourceQuery "{?res a dcat:Distribution .}";
+    :resourceQuery "{?res a dcat:Distribution .} LIMIT 2";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
     :dataSource data:DataSource1 .
 

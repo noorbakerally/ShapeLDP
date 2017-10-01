@@ -16,6 +16,11 @@ public class RDFFileDataSource extends DataSource{
         loadModel();
     }
 
+    public void setLocation(String location) {
+        this.location = location;
+        loadModel();
+    }
+
     public void loadModel(){
         if (model==null){
             model = ModelFactory.createDefaultModel();

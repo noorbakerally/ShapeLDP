@@ -31,9 +31,8 @@ public abstract class DataSource {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public abstract void setLocation(String location);
+
 
     public Model getModel() {
         return model;

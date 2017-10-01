@@ -5,6 +5,7 @@ import loader.configuration.NonContainerMap;
 import tests.Test1;
 import tests.Test2;
 import tests.Test3;
+import tests.Test4;
 
 import java.io.File;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class main {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         */
 
-        Test3 t1 = new Test3();
+        Test4 t1 = new Test4();
 
 
     }
