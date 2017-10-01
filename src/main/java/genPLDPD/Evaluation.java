@@ -56,18 +56,17 @@ public class Evaluation {
         for (GenID genID:genIDS){
             String newIRI = genID.getLdprIRI();
             String resourceIRI = genID.getRdfResourceIRI();
-
-            for (Map.Entry <String,NonContainerMap> ncmEntry:containerMap.getNonContainerMaps().entrySet()){
-                String ncmIRI = ncmEntry.getKey();
-                NonContainerMap ncm = ncmEntry.getValue();
-                EvalResult evalResult = evalNM(ncm, new Container(newIRI), new RDFResource(resourceIRI), Utilities.mergeDataSet(ds, dt));
-                dt = Utilities.mergeDataSet(dt,evalResult.getDs());
-            }
-
             for (Map.Entry <String,ContainerMap> cmEntry:containerMap.getContainerMaps().entrySet()){
                 String cmIRI = cmEntry.getKey();
                 ContainerMap cm = cmEntry.getValue();
                 EvalResult evalResult = evalCM(cm, new Container(newIRI), new RDFResource(resourceIRI), Utilities.mergeDataSet(ds, dt));
+                dt = Utilities.mergeDataSet(dt,evalResult.getDs());
+            }
+            for (Map.Entry <String,NonContainerMap> ncmEntry:containerMap.getNonContainerMaps().entrySet()){
+                String ncmIRI = ncmEntry.getKey();
+                NonContainerMap ncm = ncmEntry.getValue();
+                Dataset tempDS = Utilities.mergeDataSet(ds, dt);
+                EvalResult evalResult = evalNM(ncm, new Container(newIRI), new RDFResource(resourceIRI),tempDS);
                 dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             }
 

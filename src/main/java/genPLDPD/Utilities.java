@@ -11,10 +11,20 @@ import java.util.Iterator;
  * Created by noor on 30/09/17.
  */
 public class Utilities {
+
+    public static Dataset cloneDataset(Dataset ds){
+        Dataset df = DatasetFactory.create();
+        Iterator<String> names = ds.listNames();
+        while (names.hasNext()){
+            String name = names.next();
+            df.addNamedModel(name,ds.getNamedModel(name));
+        }
+        return df;
+    }
     public static Dataset mergeDataSet(Dataset d1,Dataset d2){
         Dataset dsf = DatasetFactory.create();
-        Dataset ds1 = DatasetFactory.wrap(d1.asDatasetGraph());
-        Dataset ds2 = DatasetFactory.wrap(d2.asDatasetGraph());
+        Dataset ds1 = cloneDataset(d1);
+        Dataset ds2 = cloneDataset(d2);
         Iterator<String> ds1Iterator = ds1.listNames();
         while (ds1Iterator.hasNext()){
             String name = ds1Iterator.next();
