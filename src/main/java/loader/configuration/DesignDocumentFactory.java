@@ -39,24 +39,26 @@ public class DesignDocumentFactory {
         }
 
 
+        //load all container maps in the temporary list
+        String containerMapQuery="SELECT DISTINCT ?containerMap " +
+                "WHERE { ?containerMap a :ContainerMap .}";
+        ResultSet containerMapRs = Global.exeQuery(containerMapQuery, model);
+        while (containerMapRs.hasNext()){
+            String containerMapIRI = containerMapRs.next().get("?containerMap").toString();
+            ContainerMap containerMap = new ContainerMap(containerMapIRI);
+            containerMaps.put(containerMapIRI,containerMap);
+        }
+
         //load all null container maps in the temporary list
         String ncontainerMapQuery="SELECT DISTINCT ?containerMap " +
                 "WHERE { ?containerMap a :NullContainerMap .}";
         ResultSet ncontainerMapRs = Global.exeQuery(ncontainerMapQuery, model);
         while (ncontainerMapRs.hasNext()){
 
-
             //set null container as container map
-
-
             String containerMapIRI = ncontainerMapRs.next().get("?containerMap").toString();
-
             String containerMapClassIRI = Global.prefixMap.getNsPrefixURI("")+"ContainerMap";
-
             model = model.add(ResourceFactory.createResource(containerMapIRI), RDF.type,ResourceFactory.createResource(containerMapClassIRI));
-
-
-
             ContainerMap containerMap = new ContainerMap(containerMapIRI);
 
 
@@ -69,20 +71,11 @@ public class DesignDocumentFactory {
 
 
             containerMap.addResourceMap(nullResourceMap);
+
             containerMaps.put(containerMapIRI,containerMap);
 
         }
 
-
-        //load all container maps in the temporary list
-        String containerMapQuery="SELECT DISTINCT ?containerMap " +
-                "WHERE { ?containerMap a :ContainerMap .}";
-        ResultSet containerMapRs = Global.exeQuery(containerMapQuery, model);
-        while (containerMapRs.hasNext()){
-            String containerMapIRI = containerMapRs.next().get("?containerMap").toString();
-            ContainerMap containerMap = new ContainerMap(containerMapIRI);
-            containerMaps.put(containerMapIRI,containerMap);
-        }
 
         //load all non container maps in the temporary list
         String nonContainerMapQuery="SELECT DISTINCT ?nonContainerMap " +
