@@ -24,6 +24,7 @@ public class Evaluation {
 
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
+        Map <String,String> parents = new HashMap<String, String>();
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
 

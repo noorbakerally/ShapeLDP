@@ -1,5 +1,6 @@
 @prefix :     <http://opensensingcity.emse.fr/LDPDesignVocabulary/> .
 @prefix data:     <http://opensensingcity.emse.fr/LDPDesign/data/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#>
 
 data:catalogCM a :ContainerMap;
     :resourceMap data:catalogRM;

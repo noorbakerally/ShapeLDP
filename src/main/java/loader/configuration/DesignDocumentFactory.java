@@ -24,6 +24,8 @@ public class DesignDocumentFactory {
         designDocument = new DesignDocument();
         model = RDFDataMgr.loadModel(ddLocation);
 
+
+
         //getting the defined prefixes from the design document
         Global.prefixMap = PrefixMapping.Factory.create();
         Global.prefixMap.setNsPrefixes(model.getNsPrefixMap());
