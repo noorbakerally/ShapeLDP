@@ -4,8 +4,11 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDF;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +28,6 @@ public class DesignDocumentFactory {
         model = RDFDataMgr.loadModel(ddLocation);
 
 
-
         //getting the defined prefixes from the design document
         Global.prefixMap = PrefixMapping.Factory.create();
         Global.prefixMap.setNsPrefixes(model.getNsPrefixMap());
@@ -35,6 +37,42 @@ public class DesignDocumentFactory {
             String value = prefix.getValue();
             Global.prefixes = "PREFIX "+key+" <"+value+">\n" + Global.prefixes;
         }
+
+
+        //load all null container maps in the temporary list
+        String ncontainerMapQuery="SELECT DISTINCT ?containerMap " +
+                "WHERE { ?containerMap a :NullContainerMap .}";
+        ResultSet ncontainerMapRs = Global.exeQuery(ncontainerMapQuery, model);
+        while (ncontainerMapRs.hasNext()){
+
+
+            //set null container as container map
+
+
+            String containerMapIRI = ncontainerMapRs.next().get("?containerMap").toString();
+
+            String containerMapClassIRI = Global.prefixMap.getNsPrefixURI("")+"ContainerMap";
+
+            model = model.add(ResourceFactory.createResource(containerMapIRI), RDF.type,ResourceFactory.createResource(containerMapClassIRI));
+
+
+
+            ContainerMap containerMap = new ContainerMap(containerMapIRI);
+
+
+            //create the null resource map
+            ResourceMap nullResourceMap = new ResourceMap("nullResourceMap");
+            nullResourceMap.setResourceQuery("{VALUES (?res) {(UNDEF)}}");
+            DataSource nullDataSource = new RDFFileDataSource("null");
+            nullDataSource.setModel(ModelFactory.createDefaultModel());
+            nullResourceMap.addDataSource(nullDataSource);
+
+
+            containerMap.addResourceMap(nullResourceMap);
+            containerMaps.put(containerMapIRI,containerMap);
+
+        }
+
 
         //load all container maps in the temporary list
         String containerMapQuery="SELECT DISTINCT ?containerMap " +
@@ -46,7 +84,7 @@ public class DesignDocumentFactory {
             containerMaps.put(containerMapIRI,containerMap);
         }
 
-        //load all container maps in the temporary list
+        //load all non container maps in the temporary list
         String nonContainerMapQuery="SELECT DISTINCT ?nonContainerMap " +
                 "WHERE { ?nonContainerMap a :NonContainerMap .}";
         ResultSet nonContainerMapRs = Global.exeQuery(nonContainerMapQuery, model);
@@ -58,6 +96,10 @@ public class DesignDocumentFactory {
             //load the nonContainer map
             loadNonContainerMap(nonContainerMap);
         }
+
+
+        setContainerMaps();
+        setNonContainerMaps();
 
         //load container map objects
         for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
@@ -84,8 +126,6 @@ public class DesignDocumentFactory {
 
     static void loadContainerMap(ContainerMap containerMap){
         setContainerType(containerMap);
-        setContainerMaps(containerMap);
-        setNonContainerMaps(containerMap);
         setResourceMaps(containerMap);
 
         //load resource map datasources
@@ -106,7 +146,7 @@ public class DesignDocumentFactory {
         }
     }
 
-    static void setContainerMaps(ContainerMap containerMap){
+    static void setContainerMaps(){
         String containerMapQuery = "SELECT DISTINCT * \n" +
                 "WHERE { ?parentIRI a :ContainerMap . ?childIRI a :ContainerMap . " +
                 "?parentIRI :containerMap ?childIRI ." +
@@ -120,7 +160,7 @@ public class DesignDocumentFactory {
         }
     }
 
-    static void setNonContainerMaps(ContainerMap containerMap){
+    static void setNonContainerMaps(){
         String nonContainerMapQuery = "SELECT DISTINCT * \n" +
                 "WHERE { ?nonContainerMapIRI a :NonContainerMap . " +
                 "?containerMapIRI :nonContainerMap ?nonContainerMapIRI ." +

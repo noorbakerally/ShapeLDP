@@ -43,5 +43,7 @@ public abstract class DataSource {
     }
 
     public abstract ResultSet executeResourceQuery(String query);
+
+
     public abstract Model executeGraphQuery(String query);
 }

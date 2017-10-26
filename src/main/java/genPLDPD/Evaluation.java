@@ -117,19 +117,23 @@ public class Evaluation {
                 QuerySolution qs = rs.next();
 
                 //get the current resource IRI
-                String resourceIRI = qs.get("?res").toString();
+                RDFNode resource = qs.get("?res");
+                if (resource != null){
+                    String resourceIRI = resource.toString();
+                    //create the resource in the list
+                    if (!resources.containsKey(resourceIRI)){
+                        resources.put(resourceIRI,new RDFResource(resourceIRI));
+                    }
 
-                //create the resource in the list
-                if (!resources.containsKey(resourceIRI)){
-                    resources.put(resourceIRI,new RDFResource(resourceIRI));
+                    //get the resource graph
+                    String graphQuery = resourceMap.getGraphQuery();
+                    graphQuery = graphQuery.replace("?res","<"+resourceIRI+">");
+                    Model tempModel = dataSource.executeGraphQuery(graphQuery);
+                    resources.get(resourceIRI).mergeModel(tempModel);
+                } else {
+                    String rname = "null"+Math.random();
+                    resources.put(rname,new RDFResource(rname));
                 }
-
-                //get the resource graph
-                String graphQuery = resourceMap.getGraphQuery();
-                graphQuery = graphQuery.replace("?res","<"+resourceIRI+">");
-                Model tempModel = dataSource.executeGraphQuery(graphQuery);
-                resources.get(resourceIRI).mergeModel(tempModel);
-
             }
 
         }

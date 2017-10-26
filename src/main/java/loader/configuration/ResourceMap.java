@@ -84,4 +84,9 @@ public class ResourceMap {
     public void setDataSources(Map<String, DataSource> dataSources) {
         this.dataSources = dataSources;
     }
+
+    public void addDataSource(DataSource dataSource){
+        dataSources.put(dataSource.getIRI(),dataSource);
+    }
+
 }
