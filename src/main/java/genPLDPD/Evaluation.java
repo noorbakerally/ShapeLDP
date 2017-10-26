@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
-    Map <String,String> parents = new HashMap<String, String>();
+    
 
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
