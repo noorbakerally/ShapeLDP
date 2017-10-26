@@ -18,13 +18,14 @@ data:catalogRM a :ResourceMap;
     :dataSource data:DataSource1 .
 
 data:datasetRM a :ResourceMap;
-    :resourceQuery "{ ?pres dcat:dataset ?res .}";
+    :resourceQuery "{ ?pres dcat:dataset ?res .} LIMIT 1";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:distribution)) }";
     :dataSource data:DataSource1 .
 
 data:distributionRM a :ResourceMap;
-    :resourceQuery "{?pres dcat:distribution ?res .}";
-    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }" .
+    :resourceQuery "{?pres dcat:distribution ?res .} LIMIT 1";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
+    :dataSource data:DataSource1 .
 
 data:DataSource1 a :DataSource;
     :location "https://opendata.paris.fr/api/v2/catalog/exports/ttl" .

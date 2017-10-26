@@ -21,36 +21,37 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
+    Map <String,String> parents = new HashMap<String, String>();
 
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
-        Map <String,String> parents = new HashMap<String, String>();
+
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
 
         for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
             String iri = containerMapEntry.getKey();
             ContainerMap containerMap = containerMapEntry.getValue();
-            EvalResult evalResult = evalCM(containerMap, new Container(base), null, ldpDD);
+            EvalResult evalResult = evalCM(containerMap, new Container(base), null,ldpDD);
             ldpDD = Utilities.mergeDataSet(ldpDD,evalResult.getDs());
         }
 
         for (Map.Entry <String,NonContainerMap> nonContainerMapEntry:nonContainerMaps.entrySet()){
             String iri = nonContainerMapEntry.getKey();
             NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
-            EvalResult evalResult = evalNM(nonContainerMap, new Container(base), null, ldpDD);
+            EvalResult evalResult = evalNM(nonContainerMap, new Container(base), null,ldpDD);
             ldpDD = Utilities.mergeDataSet(ldpDD,evalResult.getDs());
         }
         return ldpDD;
     }
 
-    public static EvalResult evalCM(ContainerMap containerMap, Container container,RDFResource relatedResource, Dataset ds){
+    public static EvalResult evalCM(ContainerMap containerMap, Container container,String parent,Dataset ds){
         Dataset dt = DatasetFactory.create();
         List <GenID> genIDS = new ArrayList<GenID>();
         for (Map.Entry <String,ResourceMap> resourceMapEntry:containerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
             Dataset tempDS = Utilities.mergeDataSet(dt, ds);
-            EvalResult evalResult = evalRM(currentResourceMap, containerMap, container, relatedResource, tempDS);
+            EvalResult evalResult = evalRM(currentResourceMap, containerMap, container, parent,tempDS);
             dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             genIDS.addAll(evalResult.getGenIDs());
         }
@@ -60,14 +61,14 @@ public class Evaluation {
             for (Map.Entry <String,ContainerMap> cmEntry:containerMap.getContainerMaps().entrySet()){
                 String cmIRI = cmEntry.getKey();
                 ContainerMap cm = cmEntry.getValue();
-                EvalResult evalResult = evalCM(cm, new Container(newIRI), new RDFResource(resourceIRI), Utilities.mergeDataSet(ds, dt));
+                EvalResult evalResult = evalCM(cm, new Container(newIRI), resourceIRI,Utilities.mergeDataSet(ds, dt));
                 dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             }
             for (Map.Entry <String,NonContainerMap> ncmEntry:containerMap.getNonContainerMaps().entrySet()){
                 String ncmIRI = ncmEntry.getKey();
                 NonContainerMap ncm = ncmEntry.getValue();
                 Dataset tempDS = Utilities.mergeDataSet(ds, dt);
-                EvalResult evalResult = evalNM(ncm, new Container(newIRI), new RDFResource(resourceIRI),tempDS);
+                EvalResult evalResult = evalNM(ncm, new Container(newIRI), resourceIRI,tempDS);
                 dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             }
 
@@ -76,13 +77,13 @@ public class Evaluation {
 
     }
 
-    public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,RDFResource relatedResource, Dataset ds){
+    public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,String parent,Dataset ds){
         Dataset dt = DatasetFactory.create();
         List <GenID> genIDS = new ArrayList<GenID>();
         for (Map.Entry <String,ResourceMap> resourceMapEntry:nonContainerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
             Dataset tempDS = Utilities.mergeDataSet(dt, ds);
-            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container, relatedResource, tempDS);
+            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container, parent,tempDS);
             dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             genIDS.addAll(evalResult.getGenIDs());
         }
@@ -90,17 +91,19 @@ public class Evaluation {
         return evalResult;
     }
 
-    public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, RDFResource relatedResource, Dataset ds){
+    public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, String parent, Dataset ds){
         Dataset dt = DatasetFactory.create();
         List<GenID> genIDts = new ArrayList<GenID>();
 
         String resourceQuery = resourceMap.getResourceQuery();
-        String finalQuery = "Select * WHERE "+resourceQuery;
 
         //replace the parent resource if it exist in the query
-        if (relatedResource != null){
-            resourceQuery.replace("?pres","<"+relatedResource.getIRI()+">");
+        if (parent != null){
+            resourceQuery = resourceQuery.replace("?pres","<"+parent+">");
         }
+
+        //add select all
+        String finalQuery = "Select * WHERE "+resourceQuery;
 
         //a list to hold all resources generated from all datasources
         //and their model
