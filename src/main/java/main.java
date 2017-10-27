@@ -2,6 +2,7 @@ import loader.configuration.ContainerMap;
 import loader.configuration.DesignDocument;
 import loader.configuration.DesignDocumentFactory;
 import loader.configuration.NonContainerMap;
+import org.apache.commons.lang3.StringUtils;
 import tests.*;
 
 import java.io.File;
@@ -24,8 +25,7 @@ public class main {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         */
 
-        Test10 t1 = new Test10();
-
+        Test11 t1 = new Test11();
 
     }
 }
