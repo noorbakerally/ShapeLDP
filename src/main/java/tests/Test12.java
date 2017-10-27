@@ -8,6 +8,9 @@ import loader.configuration.NonContainerMap;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.sparql.core.DatasetPrefixStorage;
+import org.apache.jena.sparql.core.mem.DatasetPrefixStorageInMemory;
+import org.apache.jena.tdb.store.DatasetPrefixesTDB;
 
 import java.io.File;
 import java.util.Map;
@@ -29,7 +32,6 @@ public class Test12 {
 
 
         RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
-
 
     }
 }
