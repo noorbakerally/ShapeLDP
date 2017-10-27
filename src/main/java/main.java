@@ -5,13 +5,14 @@ import loader.configuration.NonContainerMap;
 import tests.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 /**
  * Created by noor on 30/09/17.
  */
 public class main {
-    public static void main(String [] args){
+    public static void main(String [] args) {
 
         /*
         ClassLoader classLoader = main.class.getClassLoader();
@@ -23,7 +24,7 @@ public class main {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         */
 
-        Test4 t1 = new Test4();
+        Test10 t1 = new Test10();
 
 
     }

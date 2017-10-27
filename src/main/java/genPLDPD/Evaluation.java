@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
-    
+
 
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
@@ -99,9 +99,9 @@ public class Evaluation {
 
         String resourceQuery = resourceMap.getResourceQuery();
 
-        //replace the parent resource if it exist in the query
-        if (resourceQuery.contains("?pres")){
-            resourceQuery = resourceQuery.replace("?pres","<"+parents.get(parents.size()-1)+">");
+
+        if (resourceQuery.contains("$parent$")){
+            resourceQuery = resourceQuery.replace("$parent$","<"+parents.get(parents.size()-1)+"> ");
         }
 
         //add select all
