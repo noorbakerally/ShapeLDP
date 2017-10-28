@@ -105,22 +105,7 @@ public class Evaluation {
             resourceQuery = resourceQuery.replace("$parent$","<"+parents.get(parents.size()-1)+"> ");
         }*/
 
-        int iloc = 0;
-        if (resourceQuery.contains("$parent")){
-            while (iloc < resourceQuery.length()){
-                int floc = resourceQuery.indexOf("$",0);
-                int lloc = resourceQuery.indexOf("$",floc+1);
-                if (floc > 0){
-                    String expr = resourceQuery.substring(floc+1,lloc).replace(".","");
-                    int expc = StringUtils.countMatches(expr,"parent");
-                    String expValue = parents.get(parents.size()-expc);
-                    resourceQuery = resourceQuery.substring(0,iloc) + resourceQuery.substring(iloc,floc) + "<"+expValue+">"+resourceQuery.substring(lloc+1,resourceQuery.length());
-                } else {
-                    iloc = resourceQuery.length() + 1;
-                }
-                //System.out.println(floc+" "+lloc);
-            }
-        }
+        resourceQuery = Utilities.processRawQuery(resourceQuery,parents);
 
 
         //add select all

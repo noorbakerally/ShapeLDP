@@ -1,11 +1,13 @@
 package genPLDPD;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by noor on 30/09/17.
@@ -46,5 +48,26 @@ public class Utilities {
 
     public static String genIRI(String base, String res){
         return base+"?IRI="+res;
+    }
+
+    public static String processRawQuery(String resourceQuery,List<String> parents){
+        int iloc = 0;
+        if (resourceQuery.contains("$parent")){
+            while (iloc < resourceQuery.length()){
+                int floc = resourceQuery.indexOf("$",0);
+                int lloc = resourceQuery.indexOf("$",floc+1);
+                if (floc > 0){
+                    String expr = resourceQuery.substring(floc+1,lloc).replace(".","");
+                    int expc = StringUtils.countMatches(expr,"parent");
+                    String expValue = parents.get(parents.size()-expc);
+                    resourceQuery = resourceQuery.substring(0,iloc) +
+                            resourceQuery.substring(iloc,floc) +
+                            "<"+expValue+">"+resourceQuery.substring(lloc+1,resourceQuery.length());
+                } else {
+                    iloc = resourceQuery.length() + 1;
+                }
+            }
+        }
+        return resourceQuery;
     }
 }
