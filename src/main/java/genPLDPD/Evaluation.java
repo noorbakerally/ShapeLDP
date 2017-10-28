@@ -151,7 +151,10 @@ public class Evaluation {
         for (Map.Entry<String,RDFResource> rdfResourceEntry:resources.entrySet()){
             String currentResourceIRI = rdfResourceEntry.getKey();
             RDFResource currentResource = rdfResourceEntry.getValue();
-            String newIRI = Utilities.genIRI(base,currentResourceIRI);
+
+            String newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResourceIRI,parents);
+
+
 
             //generate the entire model here for the LDP resource
             //currently using only the direct model generate from the datasources

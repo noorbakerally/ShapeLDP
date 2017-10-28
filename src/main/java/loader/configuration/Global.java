@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by noor on 29/09/17.
  */
 public class Global {
-    static String base = "http://example.com";
+    static String base = "";
     public enum ContainerType {Basic,Direct,Indirect}
     public static PrefixMapping prefixMap;
     public static String prefixes = "";

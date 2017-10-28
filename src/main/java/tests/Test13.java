@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class Test13 {
     public Test13() {
-        String base = "http://www.example.com";
+        String base = "";
         Evaluation.base = base;
         ClassLoader classLoader = Test4.class.getClassLoader();
         File file = new File(classLoader.getResource("Test13.ttl").getFile());
