@@ -30,7 +30,7 @@ public class main {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         */
 
-        //Test12 t1 = new Test12();
+        Test13 t1 = new Test13();
 
         /*String path = "http://www.eriklievaart.com/blog/javacc2.html";
         String str = Utilities.processIRITemplate("test/$path(res,0)$",path,null);
