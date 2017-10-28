@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class Utilities {
 
-
+    static GenIRI  iriParser;
 
     public static Dataset cloneDataset(Dataset ds){
         Dataset df = DatasetFactory.create();
@@ -88,10 +88,15 @@ public class Utilities {
                     ByteArrayInputStream bais = new ByteArrayInputStream(expr.getBytes());
                     System.setIn(bais);
 
-                    GenIRI parser = new GenIRI(System.in);
+                    if (iriParser == null){
+                        iriParser = new GenIRI(System.in);
+                    } else {
+                        iriParser.ReInit(System.in);
+                    }
+
                     String processedExpr = null;
                     try {
-                        processedExpr = parser.expr(resource);
+                        processedExpr = iriParser.expr(resource);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
