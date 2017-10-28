@@ -1,11 +1,14 @@
 package genPLDPD;
 
+import geniri.iri.GenIRI;
+import geniri.iri.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
+import java.io.ByteArrayInputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +16,8 @@ import java.util.List;
  * Created by noor on 30/09/17.
  */
 public class Utilities {
+
+
 
     public static Dataset cloneDataset(Dataset ds){
         Dataset df = DatasetFactory.create();
@@ -69,5 +74,35 @@ public class Utilities {
             }
         }
         return resourceQuery;
+    }
+
+    public static String processIRITemplate(String template,String resource,List <String> parents){
+        int iloc = 0;
+        if (template.contains("$")){
+
+            while (iloc < template.length()){
+                int floc = template.indexOf("$",0);
+                int lloc = template.indexOf("$",floc+1);
+                if (floc >= 0){
+                    String expr = template.substring(floc+1,lloc);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(expr.getBytes());
+                    System.setIn(bais);
+
+                    GenIRI parser = new GenIRI(System.in);
+                    String processedExpr = null;
+                    try {
+                        processedExpr = parser.expr(resource);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    template = template.substring(0,iloc) +
+                            template.substring(iloc,floc) +
+                            processedExpr+template.substring(lloc+1,template.length());
+                } else {
+                    iloc = resource.length() + 1;
+                }
+            }
+        }
+        return template;
     }
 }
