@@ -22,8 +22,6 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
-
-
     public static Dataset evalDD(DesignDocument dd,String base){
         Dataset ldpDD = DatasetFactory.create();
 
@@ -74,7 +72,6 @@ public class Evaluation {
                 EvalResult evalResult = evalNM(ncm, new Container(newIRI), new ArrayList<String>(newparents1),tempDS);
                 dt = Utilities.mergeDataSet(dt,evalResult.getDs());
             }
-
         }
         return new EvalResult(genIDS,dt);
 
@@ -148,8 +145,6 @@ public class Evaluation {
                 newIRI = container.getIRI() + "/"+newIRI;
             }
 
-
-
             //generate the entire model here for the LDP resource
             //currently using only the direct model generate from the datasources
             Dataset dtNew = DatasetFactory.create();
@@ -167,9 +162,7 @@ public class Evaluation {
             }
 
             dtNew.addNamedModel(newIRI,currentResource.getModel().union(newModel));
-
             dt = Utilities.mergeDataSet(dt,dtNew);
-
             Dataset dtContainer = DatasetFactory.create();
             Model modelCont = ModelFactory.createDefaultModel();
 
@@ -191,24 +184,19 @@ public class Evaluation {
     public static class GenID{
         String ldprIRI;
         String rdfResourceIRI;
-
         public GenID(String ldprIRI, String rdfResourceIRI) {
             this.ldprIRI = ldprIRI;
             this.rdfResourceIRI = rdfResourceIRI;
         }
-
         public String getLdprIRI() {
             return ldprIRI;
         }
-
         public void setLdprIRI(String ldprIRI) {
             this.ldprIRI = ldprIRI;
         }
-
         public String getRdfResourceIRI() {
             return rdfResourceIRI;
         }
-
         public void setRdfResourceIRI(String rdfResourceIRI) {
             this.rdfResourceIRI = rdfResourceIRI;
         }
@@ -222,34 +210,25 @@ public class Evaluation {
             this.genIDs = new ArrayList<GenID>();
             this.ds = DatasetFactory.create();
         }
-
         public EvalResult(List<GenID> genIDs,Dataset ds) {
             this.genIDs = genIDs;
             this.ds = ds;
         }
-
         public void addGenID(Container container, RDFResource rdfResource){
             GenID genID = new GenID(container.getIRI(), rdfResource.getIRI());
             genIDs.add(genID);
         }
-
         public List<GenID> getGenIDs() {
             return genIDs;
         }
-
         public void setGenIDs(List<GenID> genIDs) {
             this.genIDs = genIDs;
         }
-
         public Dataset getDs() {
             return ds;
         }
-
         public void setDs(Dataset ds) {
             this.ds = ds;
         }
     }
-
-
-
 }
