@@ -99,16 +99,7 @@ public class Evaluation {
         List<GenID> genIDts = new ArrayList<GenID>();
 
         String resourceQuery = resourceMap.getResourceQuery();
-
-
-       /* if (resourceQuery.contains("$parent$")){
-            resourceQuery = resourceQuery.replace("$parent$","<"+parents.get(parents.size()-1)+"> ");
-        }*/
-
         resourceQuery = Utilities.processRawQuery(resourceQuery,parents);
-
-
-        //add select all
         String finalQuery = "Select * WHERE "+resourceQuery;
 
         //a list to hold all resources generated from all datasources
@@ -153,6 +144,9 @@ public class Evaluation {
             RDFResource currentResource = rdfResourceEntry.getValue();
 
             String newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResourceIRI,parents);
+            if (container.getIRI().length() != 0){
+                newIRI = container.getIRI() + "/"+newIRI;
+            }
 
 
 
@@ -171,8 +165,6 @@ public class Evaluation {
                     FOAF.primaryTopic,ResourceFactory.createResource(currentResourceIRI));
 
             dtNew.addNamedModel(newIRI,currentResource.getModel().union(newModel));
-
-
 
             dt = Utilities.mergeDataSet(dt,dtNew);
 
