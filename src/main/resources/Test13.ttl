@@ -2,7 +2,7 @@
 @prefix data:     <http://opensensingcity.emse.fr/LDPDesign/data/> .
 @prefix dcat: <http://www.w3.org/ns/dcat#>
 
-data:catalogCM a :ContainerMap;
+data:catalogCM a :NonContainerMap;
     :iriTemplate "$path(res,0)$";
     :resourceMap data:catalogRM .
 

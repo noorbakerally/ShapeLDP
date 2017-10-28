@@ -112,10 +112,52 @@ public class DesignDocumentFactory {
 
         }
 
-
+        setContainerMapAttributes();
+        setNonContainerMapAttributes();
 
         return designDocument;
     }
+
+    static void setContainerMapAttributes(){
+        String ResourceMapQuery = "SELECT DISTINCT * \n" +
+                "WHERE { ?sourceMap a :ContainerMap . " +
+                "?sourceMap ?p ?o ." +
+                "}";
+
+        ResultSet rs = Global.exeQuery(ResourceMapQuery, model);
+        //System.out.println(ResultSetFormatter.asText(rs));
+        while (rs.hasNext()) {
+            QuerySolution qs = rs.next();
+            String containerMapIRI = qs.get("?sourceMap").toString();
+            String p = qs.get("?p").toString();
+            String o = qs.get("?o").toString();
+
+            if (Global.getVTerm("iriTemplate").equals(p)) {
+                containerMaps.get(containerMapIRI).setIriTemplate(o);
+            }
+        }
+    }
+
+    static void setNonContainerMapAttributes(){
+        String ResourceMapQuery = "SELECT DISTINCT * \n" +
+                "WHERE { ?sourceMap a :NonContainerMap . " +
+                "?sourceMap ?p ?o ." +
+                "}";
+
+        ResultSet rs = Global.exeQuery(ResourceMapQuery, model);
+        //System.out.println(ResultSetFormatter.asText(rs));
+        while (rs.hasNext()) {
+            QuerySolution qs = rs.next();
+            String nonContainerMapIRI = qs.get("?sourceMap").toString();
+            String p = qs.get("?p").toString();
+            String o = qs.get("?o").toString();
+
+            if (Global.getVTerm("iriTemplate").equals(p)) {
+                nonContainerMaps.get(nonContainerMapIRI).setIriTemplate(o);
+            }
+        }
+    }
+
 
     static void loadContainerMap(ContainerMap containerMap){
         setContainerType(containerMap);
