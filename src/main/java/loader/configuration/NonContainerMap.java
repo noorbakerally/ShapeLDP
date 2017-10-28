@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class NonContainerMap implements HasResourceMap{
     String IRI;
+    String iriTemplate;
     ContainerMap parentContainerMap;
     Map<String,ResourceMap> resourceMaps = new HashMap<String, ResourceMap>();
 
@@ -36,6 +37,10 @@ public class NonContainerMap implements HasResourceMap{
         return Global.LDPRType.RDFSource;
     }
 
+    public String getIRITemplate() {
+        return iriTemplate;
+    }
+
     public String toString(int level) {
         String str = "";
         String tab= StringUtils.repeat("\t", level);
@@ -52,6 +57,14 @@ public class NonContainerMap implements HasResourceMap{
 
     public Map<String, ResourceMap> getResourceMaps() {
         return resourceMaps;
+    }
+
+    public String getIriTemplate() {
+        return iriTemplate;
+    }
+
+    public void setIriTemplate(String iriTemplate) {
+        this.iriTemplate = iriTemplate;
     }
 
     public void setResourceMaps(Map<String, ResourceMap> resourceMaps) {

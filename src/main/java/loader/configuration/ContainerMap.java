@@ -9,6 +9,7 @@ import java.util.Map;
  * Created by noor on 29/09/17.
  */
 public class ContainerMap implements HasResourceMap {
+    String iriTemplate;
     String IRI;
     Map<String,ContainerMap> containerMaps = new HashMap<String, ContainerMap>();
     Map<String,NonContainerMap> nonContainerMaps = new HashMap<String, NonContainerMap>();
@@ -34,6 +35,14 @@ public class ContainerMap implements HasResourceMap {
 
     public String getIRI() {
         return IRI;
+    }
+
+    public String getIriTemplate() {
+        return iriTemplate;
+    }
+
+    public void setIriTemplate(String iriTemplate) {
+        this.iriTemplate = iriTemplate;
     }
 
     public String getContainerType() {
@@ -90,6 +99,10 @@ public class ContainerMap implements HasResourceMap {
     }
     public Global.LDPRType getType() {
         return Global.LDPRType.Basic;
+    }
+
+    public String getIRITemplate() {
+        return iriTemplate;
     }
 
     public Map<String, ContainerMap> getContainerMaps() {

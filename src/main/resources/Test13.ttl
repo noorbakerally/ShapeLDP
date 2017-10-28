@@ -3,6 +3,7 @@
 @prefix dcat: <http://www.w3.org/ns/dcat#>
 
 data:catalogCM a :ContainerMap;
+    :iriTemplate "$path(res,0)$";
     :resourceMap data:catalogRM .
 
 data:catalogRM a :ResourceMap;
