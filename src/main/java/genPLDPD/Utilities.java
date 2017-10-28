@@ -62,7 +62,8 @@ public class Utilities {
                 int floc = resourceQuery.indexOf("$",0);
                 int lloc = resourceQuery.indexOf("$",floc+1);
                 if (floc > 0){
-                    String expr = resourceQuery.substring(floc+1,lloc).replace(".","");
+                    String expr = resourceQuery.substring(floc+1,lloc);
+                    expr = expr.replace("\\.","");
                     int expc = StringUtils.countMatches(expr,"parent");
                     String expValue = parents.get(parents.size()-expc);
                     resourceQuery = resourceQuery.substring(0,iloc) +
