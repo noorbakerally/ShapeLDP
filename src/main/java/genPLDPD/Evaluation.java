@@ -161,8 +161,10 @@ public class Evaluation {
                     RDF.type,ResourceFactory.createResource(newType));
 
             //temporary, to replace with graph patterns from parentMap
-            newModel = newModel.add(ResourceFactory.createResource(newIRI),
-                    FOAF.primaryTopic,ResourceFactory.createResource(currentResourceIRI));
+            if (!currentResourceIRI.substring(0,4).equals("null")){
+                newModel = newModel.add(ResourceFactory.createResource(newIRI),
+                        FOAF.primaryTopic,ResourceFactory.createResource(currentResourceIRI));
+            }
 
             dtNew.addNamedModel(newIRI,currentResource.getModel().union(newModel));
 
