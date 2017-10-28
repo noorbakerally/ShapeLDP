@@ -4,7 +4,11 @@
 
 data:datasetCM a :ContainerMap;
     :iriTemplate "$path(res,4)$";
+    :containerMap data:distributions;
     :resourceMap data:datasetRM .
+
+data:distributions a :NullContainerMap;
+    :iriTemplate "distributions" .
 
 data:datasetRM a :ResourceMap;
     :resourceQuery "{ ?x dcat:dataset ?res .} LIMIT 2";
