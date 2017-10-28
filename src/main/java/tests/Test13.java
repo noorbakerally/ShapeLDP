@@ -24,10 +24,7 @@ public class Test13 {
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath());
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
-
         Dataset ds = Evaluation.evalDD(dd,base);
-
-
         RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
 
     }
