@@ -42,10 +42,10 @@ public class Global {
     public static String getLDPRTypeIRI(LDPRType ldprType){
         String iri = null;
         if (ldprType == LDPRType.Basic){
-            iri = "http://www.w3.org/2012/ldp#BasicContainer";
+            iri = "http://www.w3.org/ns/ldp#BasicContainer";
         }
         if (ldprType == LDPRType.RDFSource){
-            iri = "http://www.w3.org/2012/ldp#RDFSource";
+            iri = "http://www.w3.org/ns/ldp#RDFSource";
         }
         return iri;
     }
