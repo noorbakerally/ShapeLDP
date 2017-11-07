@@ -1,13 +1,12 @@
 package run;
 
 import genPLDPD.Evaluation;
-import loader.configuration.ContainerMap;
-import loader.configuration.DesignDocument;
-import loader.configuration.DesignDocumentFactory;
-import loader.configuration.NonContainerMap;
+import loader.configuration.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.apache.jena.query.Dataset;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
@@ -41,6 +40,8 @@ public class Main {
         String inputDataSource = null;
         if (cl.hasOption("is")){
             inputDataSource = cl.getOptionValue("is");
+            Model model = ModelFactory.createDefaultModel();
+            Global.defaultmodel = model.read(inputDataSource);
             System.out.println("Using default data source for all ResourceMap:"+inputDataSource);
         }
         if (cl.hasOption("d")){
@@ -56,7 +57,9 @@ public class Main {
 
         
         System.out.println("Evaluating design document:Started");
+        long startTime = System.currentTimeMillis();
         Dataset ds = Evaluation.evalDD(dd,base);
+        long endTime = System.currentTimeMillis();
         System.out.println("Evaluating design document:Completed");
 
 

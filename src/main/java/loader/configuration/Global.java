@@ -15,6 +15,7 @@ public class Global {
     public static PrefixMapping prefixMap;
     public static String prefixes = "";
     public static String vocabularyPrefix = "http://opensensingcity.emse.fr/LDPDesignVocabulary/";
+    public static Model defaultmodel;
 
 
     public static ResultSet exeQuery(String queryStr, Model model){

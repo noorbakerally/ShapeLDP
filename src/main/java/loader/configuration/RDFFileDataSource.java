@@ -1,5 +1,6 @@
 package loader.configuration;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -22,7 +23,10 @@ public class RDFFileDataSource extends DataSource{
     }
 
     public void loadModel(){
-        if (model==null){
+        if (super.getIRI().equals("DefaulDatasource")){
+            model = Global.defaultmodel;
+        } else if (model==null){
+            System.out.println("Load nondefault model");
             model = ModelFactory.createDefaultModel();
             model.read(location);
         }
