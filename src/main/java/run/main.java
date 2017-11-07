@@ -57,17 +57,28 @@ public class main {
 
 
         if (cl.hasOption("o")){
-            outputFile = cl.getOptionValue("d");
+            outputFile = cl.getOptionValue("o");
             StringWriter writer = new StringWriter();
             RDFDataMgr.write(writer, ds, Lang.TRIG) ;
             String data = writer.toString();
             PrintStream out = null;
+
+            File f = new File(outputFile);
+            if(!f.exists())
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             try {
-                out = new PrintStream(new FileOutputStream(outputFile));
+                out = new PrintStream(new FileOutputStream(f));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
             out.print(data);
+            out.flush();
+
         } else {
             RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
         }
