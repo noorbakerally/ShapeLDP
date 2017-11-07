@@ -14,6 +14,7 @@ import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.*;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -61,6 +62,13 @@ public class Main {
         Dataset ds = Evaluation.evalDD(dd,base);
         long endTime = System.currentTimeMillis();
         System.out.println("Evaluating design document:Completed");
+        long timeTaken = endTime - startTime;
+        /*String timeTakeStr = String.format("%02d min, %02d sec",
+                TimeUnit.MILLISECONDS.toMinutes(timeTaken),
+                TimeUnit.MILLISECONDS.toSeconds(timeTaken) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeTaken))
+        );*/
+        System.out.println("Time taken:"+timeTaken);
 
 
         if (cl.hasOption("o")){
