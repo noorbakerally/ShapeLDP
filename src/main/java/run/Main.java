@@ -37,13 +37,18 @@ public class Main {
         Evaluation.base = base;
         DesignDocument dd = null;
         String outputFile = null;
-        
+
+        String inputDataSource = null;
+        if (cl.hasOption("is")){
+            inputDataSource = cl.getOptionValue("is");
+            System.out.println("Using default data source for all ResourceMap:"+inputDataSource);
+        }
         if (cl.hasOption("d")){
             String designDocumentPath = cl.getOptionValue("d");
             try{
                 System.out.println("Loading the design documnent from:"+designDocumentPath);
                 File file = new File(designDocumentPath);
-                dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath());
+                dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(),inputDataSource);
             } catch (Exception exception){
                 System.out.println("Error while trying to load file:"+designDocumentPath);
             }

@@ -12,6 +12,7 @@ import org.apache.jena.vocabulary.RDF;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by noor on 29/09/17.
@@ -22,8 +23,10 @@ public class DesignDocumentFactory {
 
     private static Map <String,ContainerMap> containerMaps = new HashMap<String, ContainerMap>();
     private static Map <String,NonContainerMap> nonContainerMaps = new HashMap<String, NonContainerMap>();
+    static String defaultInputDataSource = null;
+    public  static DesignDocument createDDFromFile(String ddLocation,String inputdatasource){
+        defaultInputDataSource= inputdatasource;
 
-    public  static DesignDocument createDDFromFile(String ddLocation){
         designDocument = new DesignDocument();
         model = RDFDataMgr.loadModel(ddLocation);
 
@@ -282,6 +285,16 @@ public class DesignDocumentFactory {
             }
             if (Global.getVTerm("resourceQuery").equals(p)) {
                 resourceMap.setResourceQuery(o);
+            }
+
+            if (defaultInputDataSource !=null){
+                if (!resourceMap.dataSources.containsKey("DefaulDatasource")){
+                    String dataSourceIRI = "DefaulDatasource";
+                    DataSource dataSource = new RDFFileDataSource(dataSourceIRI);
+                    dataSource.setLocation(defaultInputDataSource);
+                    resourceMap.dataSources.clear();
+                    resourceMap.addDataSource(dataSource);
+                }
             }
 
             if (containerMaps.containsKey(sourceMap.getIRI())){

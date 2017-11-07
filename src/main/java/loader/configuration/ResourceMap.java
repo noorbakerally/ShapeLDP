@@ -1,9 +1,11 @@
 package loader.configuration;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.shared.RandomOrderGraph;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by noor on 29/09/17.
@@ -88,5 +90,4 @@ public class ResourceMap {
     public void addDataSource(DataSource dataSource){
         dataSources.put(dataSource.getIRI(),dataSource);
     }
-
 }
