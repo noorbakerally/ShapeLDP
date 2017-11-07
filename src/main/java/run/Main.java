@@ -10,16 +10,17 @@ import org.apache.commons.cli.ParseException;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import tests.Test15;
-import tests.Test4;
+
+
 
 import java.io.*;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by bakerally on 11/7/17.
  */
-public class main {
+public class Main {
     public static void main(String [] args){
         CommandLine cl = null;
         try {
@@ -32,7 +33,6 @@ public class main {
             return;
         }
 
-
         String base = "";
         Evaluation.base = base;
         DesignDocument dd = null;
@@ -41,7 +41,6 @@ public class main {
         if (cl.hasOption("d")){
             String designDocumentPath = cl.getOptionValue("d");
             try{
-
                 System.out.println("Loading the design documnent from:"+designDocumentPath);
                 File file = new File(designDocumentPath);
                 dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath());
@@ -82,10 +81,5 @@ public class main {
         } else {
             RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
         }
-
-
-
-
-
     }
 }
