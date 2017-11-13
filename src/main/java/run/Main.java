@@ -13,6 +13,8 @@ import org.apache.jena.riot.RDFDataMgr;
 
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -21,7 +23,24 @@ import java.util.logging.Logger;
  * Created by bakerally on 11/7/17.
  */
 public class Main {
-    public static void main(String [] args){
+    public static void main(String [] args) throws URISyntaxException {
+
+        /*
+        ClassLoader classLoader = Main.class.getClassLoader();
+        String base = "";
+        Evaluation.base = base;
+        String inputDataSource = "https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl";
+        Model model = ModelFactory.createDefaultModel();
+        Global.defaultmodel = model.read(inputDataSource);
+        File file = new File(classLoader.getResource("Test1.ttl").getFile());
+        DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), inputDataSource);
+        Dataset ds = Evaluation.evalDD(dd,base);
+        StringWriter writer = new StringWriter();
+        RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+        String data = writer.toString();
+        System.out.println(data);
+        */
+
         CommandLine cl = null;
         try {
             cl = CMDConfigurations.parseArguments(args);
@@ -63,13 +82,13 @@ public class Main {
         long endTime = System.currentTimeMillis();
         System.out.println("Evaluating design document:Completed");
         long timeTaken = endTime - startTime;
-        /*String timeTakeStr = String.format("%02d min, %02d sec",
-                TimeUnit.MILLISECONDS.toMinutes(timeTaken),
-                TimeUnit.MILLISECONDS.toSeconds(timeTaken) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeTaken))
-        );*/
-        System.out.println("Time taken:"+timeTaken);
 
+
+        System.out.println("Time taken:"+timeTaken);
+        System.out.println("ResourceMaps executed:"+Global.resourceMapsExecuted);
+        System.out.println("#start");
+        System.out.println(timeTaken+","+Global.resourceMapsExecuted);
+        System.out.println("#end");
 
         if (cl.hasOption("o")){
             outputFile = cl.getOptionValue("o");

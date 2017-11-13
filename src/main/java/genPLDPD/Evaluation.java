@@ -92,6 +92,11 @@ public class Evaluation {
     }
 
     public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, List <String> parents,Dataset ds){
+
+        //increase the number of resource maps executed
+        Global.resourceMapsExecuted = Global.resourceMapsExecuted +1;
+
+
         Dataset dt = DatasetFactory.create();
         List<GenID> genIDts = new ArrayList<GenID>();
 
@@ -154,6 +159,14 @@ public class Evaluation {
             String newType = Global.getLDPRTypeIRI(parentMap.getType());
             newModel = newModel.add(ResourceFactory.createResource(newIRI),
                     RDF.type,ResourceFactory.createResource(newType));
+
+            //add ldp:Container, ldp:RDFSource triples
+            if (newType.equals("http://www.w3.org/ns/ldp#BasicContainer")){
+                newModel = newModel.add(ResourceFactory.createResource(newIRI),
+                        RDF.type,ResourceFactory.createResource("http://www.w3.org/ns/ldp#Container"));
+                newModel = newModel.add(ResourceFactory.createResource(newIRI),
+                        RDF.type,ResourceFactory.createResource("http://www.w3.org/ns/ldp#RDFSource"));
+            }
 
             //temporary, to replace with graph patterns from parentMap
             if (!currentResourceIRI.substring(0,4).equals("null")){

@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class Global {
     static String base = "";
+    public static int resourceMapsExecuted;
     public enum ContainerType {Basic,Direct,Indirect}
     public static PrefixMapping prefixMap;
     public static String prefixes = "";

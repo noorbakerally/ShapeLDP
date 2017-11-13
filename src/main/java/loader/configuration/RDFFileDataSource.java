@@ -26,7 +26,7 @@ public class RDFFileDataSource extends DataSource{
         if (super.getIRI().equals("DefaulDatasource")){
             model = Global.defaultmodel;
         } else if (model==null){
-            System.out.println("Load nondefault model");
+            System.out.println("Load non default model");
             model = ModelFactory.createDefaultModel();
             model.read(location);
         }
