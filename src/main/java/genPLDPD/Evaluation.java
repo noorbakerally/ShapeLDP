@@ -28,6 +28,9 @@ public class Evaluation {
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
         List <String> parents = new ArrayList<String>();
+
+       
+
         for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
             ContainerMap containerMap = containerMapEntry.getValue();
             EvalResult evalResult = evalCM(containerMap, new Container(base),parents,ldpDD);
