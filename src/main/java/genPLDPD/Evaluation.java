@@ -22,9 +22,10 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
-    public static Dataset evalDD(DesignDocument dd,String base){
-        Dataset ldpDD = DatasetFactory.create();
 
+    static Dataset ldpDD = DatasetFactory.create();
+
+    public static Dataset evalDD(DesignDocument dd,String base){
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
         List <String> parents = new ArrayList<String>();
@@ -33,23 +34,23 @@ public class Evaluation {
 
         for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
             ContainerMap containerMap = containerMapEntry.getValue();
-            EvalResult evalResult = evalCM(containerMap, new Container(base),parents,ldpDD);
+            EvalResult evalResult = evalCM(containerMap, new Container(base),parents);
             ldpDD = evalResult.getDs();
         }
 
         for (Map.Entry <String,NonContainerMap> nonContainerMapEntry:nonContainerMaps.entrySet()){
             NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
-            EvalResult evalResult = evalNM(nonContainerMap, new Container(base), parents,ldpDD);
+            EvalResult evalResult = evalNM(nonContainerMap, new Container(base), parents);
             ldpDD = evalResult.getDs();
         }
         return ldpDD;
     }
 
-    public static EvalResult evalCM(ContainerMap containerMap, Container container,List <String> parents,Dataset ldpDD){
+    public static EvalResult evalCM(ContainerMap containerMap, Container container,List <String> parents){
         List <GenID> genIDS = new ArrayList<GenID>();
         for (Map.Entry <String,ResourceMap> resourceMapEntry:containerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
-            EvalResult evalResult = evalRM(currentResourceMap, containerMap, container,new ArrayList<String>(parents),ldpDD);
+            EvalResult evalResult = evalRM(currentResourceMap, containerMap, container,new ArrayList<String>(parents));
             ldpDD = evalResult.getDs();
             genIDS.addAll(evalResult.getGenIDs());
         }
@@ -60,12 +61,12 @@ public class Evaluation {
             newparents1.add(resourceIRI);
             for (Map.Entry <String,ContainerMap> cmEntry:containerMap.getContainerMaps().entrySet()){
                 ContainerMap cm = cmEntry.getValue();
-                EvalResult evalResult = evalCM(cm, new Container(newIRI), new ArrayList<String>(newparents1),ldpDD);
+                EvalResult evalResult = evalCM(cm, new Container(newIRI), new ArrayList<String>(newparents1));
                 ldpDD = evalResult.getDs();
             }
             for (Map.Entry <String,NonContainerMap> ncmEntry:containerMap.getNonContainerMaps().entrySet()){
                 NonContainerMap ncm = ncmEntry.getValue();
-                EvalResult evalResult = evalNM(ncm, new Container(newIRI), new ArrayList<String>(newparents1),ldpDD);
+                EvalResult evalResult = evalNM(ncm, new Container(newIRI), new ArrayList<String>(newparents1));
                 ldpDD = evalResult.getDs();
             }
         }
@@ -73,11 +74,11 @@ public class Evaluation {
 
     }
 
-    public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,List <String> parents,Dataset ldpDD){
+    public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,List <String> parents){
         List <GenID> genIDS = new ArrayList<GenID>();
         for (Map.Entry <String,ResourceMap> resourceMapEntry:nonContainerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
-            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container,parents,ldpDD);
+            EvalResult evalResult = evalRM(currentResourceMap, nonContainerMap, container,parents);
             ldpDD = evalResult.getDs();
             genIDS.addAll(evalResult.getGenIDs());
         }
@@ -85,7 +86,7 @@ public class Evaluation {
         return evalResult;
     }
 
-    public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, List <String> parents,Dataset ldpDD){
+    public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, List <String> parents){
 
         //increase the number of resource maps executed
         Global.resourceMapsExecuted = Global.resourceMapsExecuted +1;
