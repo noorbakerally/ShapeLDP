@@ -92,6 +92,11 @@ public class Main {
 
         if (cl.hasOption("o")){
             outputFile = cl.getOptionValue("o");
+            if (outputFile.equals("0")){
+                System.out.println("No output");
+                System.exit(0);
+            }
+
             StringWriter writer = new StringWriter();
             RDFDataMgr.write(writer, ds, Lang.TRIG) ;
             String data = writer.toString();
