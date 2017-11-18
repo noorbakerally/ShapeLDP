@@ -8,7 +8,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 /**
  * Created by noor on 01/10/17.
  */
-public class RDFFileDataSource extends DataSource{
+public class RDFFileDataSource extends DataSource {
     public RDFFileDataSource(String dataSourceIRI){
         super(dataSourceIRI);
     }

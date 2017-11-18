@@ -2,6 +2,7 @@ package loader.configuration;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.shared.PrefixMapping;
 
 import java.util.Map;
@@ -11,12 +12,14 @@ import java.util.Map;
  */
 public class Global {
     static String base = "";
+    public static boolean physical = true;
     public static int resourceMapsExecuted;
     public enum ContainerType {Basic,Direct,Indirect}
     public static PrefixMapping prefixMap;
     public static String prefixes = "";
     public static String vocabularyPrefix = "http://opensensingcity.emse.fr/LDPDesignVocabulary/";
     public static Model defaultmodel;
+    public static Model virtualModel = ModelFactory.createDefaultModel();
 
 
     public static ResultSet exeQuery(String queryStr, Model model){

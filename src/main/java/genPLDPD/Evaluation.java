@@ -122,10 +122,13 @@ public class Evaluation {
                     }
 
                     //get the resource graph
-                    String graphQuery = resourceMap.getGraphQuery();
-                    graphQuery = graphQuery.replace("?res","<"+resourceIRI+">");
-                    Model tempModel = dataSource.executeGraphQuery(graphQuery);
-                    resources.get(resourceIRI).mergeModel(tempModel);
+                    if (Global.physical) {
+                        String graphQuery = resourceMap.getGraphQuery();
+                        graphQuery = graphQuery.replace("?res", "<" + resourceIRI + ">");
+                        Model tempModel = dataSource.executeGraphQuery(graphQuery);
+                        resources.get(resourceIRI).mergeModel(tempModel);
+                    }
+
                 } else {
                     String rname = "null"+Math.random();
                     resources.put(rname,new RDFResource(rname));
@@ -178,6 +181,20 @@ public class Evaluation {
                 ldpDD.getNamedModel(container.getIRI()).add(containerResource,contains,newLDPResource);
 
             }
+
+            if (!Global.physical){
+                Resource newLDPResource = ResourceFactory.createResource(newIRI);
+                Resource compiledRM = ResourceFactory.createResource(resourceMap.getIRI()+"Compiled");
+
+                String graphQuery = resourceMap.getGraphQuery();
+                graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
+
+                for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()) {
+                    DataSource dataSource = datasourceEntry.getValue();
+
+                }
+            }
+
             genIDts.add(new GenID(newIRI,currentResourceIRI));
         }
         return new EvalResult(genIDts,ldpDD);
