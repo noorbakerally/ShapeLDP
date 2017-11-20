@@ -1,10 +1,16 @@
 package run;
 
+import com.github.thesmartenergy.sparql.generate.jena.SPARQLGenerate;
+import com.github.thesmartenergy.sparql.generate.jena.engine.PlanFactory;
+import com.github.thesmartenergy.sparql.generate.jena.engine.RootPlan;
+import com.github.thesmartenergy.sparql.generate.jena.query.SPARQLGenerateQuery;
 import genPLDPD.Evaluation;
 import loader.configuration.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.Dataset;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -13,9 +19,12 @@ import org.apache.jena.riot.RDFDataMgr;
 
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -23,8 +32,7 @@ import java.util.logging.Logger;
  * Created by bakerally on 11/7/17.
  */
 public class Main {
-    public static void main(String [] args) throws URISyntaxException {
-
+    public static void main(String [] args)  {
 
        /* Global.physical = false;
         ClassLoader classLoader = Main.class.getClassLoader();
@@ -46,7 +54,7 @@ public class Main {
 
 
 
-        CommandLine cl = null;
+       /* CommandLine cl = null;
         try {
             cl = CMDConfigurations.parseArguments(args);
         } catch (ParseException e) {
@@ -157,6 +165,6 @@ public class Main {
                 out.print(data);
                 out.flush();
             }
-        }
+        }*/
     }
 }
