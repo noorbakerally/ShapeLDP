@@ -7,8 +7,10 @@ import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -111,4 +113,7 @@ public class Utilities {
         }
         return template;
     }
+
+
+
 }

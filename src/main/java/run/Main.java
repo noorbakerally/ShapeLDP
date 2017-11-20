@@ -25,7 +25,8 @@ import java.util.logging.Logger;
 public class Main {
     public static void main(String [] args) throws URISyntaxException {
 
-        /*
+
+       /* Global.physical = false;
         ClassLoader classLoader = Main.class.getClassLoader();
         String base = "";
         Evaluation.base = base;
@@ -36,10 +37,14 @@ public class Main {
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), inputDataSource);
         Dataset ds = Evaluation.evalDD(dd,base);
         StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+
+
+        //RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+        RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
         String data = writer.toString();
-        System.out.println(data);
-        */
+        System.out.println(data);*/
+
+
 
         CommandLine cl = null;
         try {
@@ -75,6 +80,11 @@ public class Main {
             }
         }
 
+        if (cl.hasOption("v")){
+            Global.physical = false;
+        }
+
+
         
         System.out.println("Evaluating design document:Started");
         long startTime = System.currentTimeMillis();
@@ -93,33 +103,60 @@ public class Main {
         if (cl.hasOption("o")){
             outputFile = cl.getOptionValue("o");
             if (outputFile.equals("0")){
-                System.out.println("No output");
-                System.exit(0);
+                System.out.println("No output for LDP Dataset");
             }
-
-            StringWriter writer = new StringWriter();
-            RDFDataMgr.write(writer, ds, Lang.TRIG) ;
-            String data = writer.toString();
-            PrintStream out = null;
-
-            File f = new File(outputFile);
-            if(!f.exists())
+            else {
+                System.out.println("Writing LDPDataset to "+outputFile);
+                StringWriter writer = new StringWriter();
+                RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+                String data = writer.toString();
+                PrintStream out = null;
+                File f = new File(outputFile);
+                if(!f.exists()){
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 try {
-                    f.createNewFile();
-                } catch (IOException e) {
+                    out = new PrintStream(new FileOutputStream(f));
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
-            try {
-                out = new PrintStream(new FileOutputStream(f));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                out.print(data);
+                out.flush();
             }
-            out.print(data);
-            out.flush();
 
         } else {
             RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
+        }
+
+        if (cl.hasOption("v")){
+            String virtualFile = cl.getOptionValue("v");
+            System.out.println("virtual file"+virtualFile);
+            if (!virtualFile.equals("0")){
+                System.out.println("Writing virtual graph to "+virtualFile);
+                StringWriter writer = new StringWriter();
+                RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
+                String data = writer.toString();
+                PrintStream out = null;
+                File f = new File(virtualFile);
+                if(!f.exists()){
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    out = new PrintStream(new FileOutputStream(f));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                out.print(data);
+                out.flush();
+            }
         }
     }
 }

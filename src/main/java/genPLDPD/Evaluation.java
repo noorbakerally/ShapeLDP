@@ -122,10 +122,13 @@ public class Evaluation {
                     }
 
                     //get the resource graph
-                    String graphQuery = resourceMap.getGraphQuery();
-                    graphQuery = graphQuery.replace("?res","<"+resourceIRI+">");
-                    Model tempModel = dataSource.executeGraphQuery(graphQuery);
-                    resources.get(resourceIRI).mergeModel(tempModel);
+                    if (Global.physical) {
+                        String graphQuery = resourceMap.getGraphQuery();
+                        graphQuery = graphQuery.replace("?res", "<" + resourceIRI + ">");
+                        Model tempModel = dataSource.executeGraphQuery(graphQuery);
+                        resources.get(resourceIRI).mergeModel(tempModel);
+                    }
+
                 } else {
                     String rname = "null"+Math.random();
                     resources.put(rname,new RDFResource(rname));
@@ -178,6 +181,34 @@ public class Evaluation {
                 ldpDD.getNamedModel(container.getIRI()).add(containerResource,contains,newLDPResource);
 
             }
+
+            if (!Global.physical){
+                if (!resourceMap.getIRI().contains("nullResourceMap")) {
+                    Resource newLDPResource = ResourceFactory.createResource(newIRI);
+
+                    Resource compiledRM = ResourceFactory.createResource();
+                    Property propertyRM = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledResourceMap");
+                    Global.virtualModel.add(ResourceFactory.createStatement(newLDPResource,propertyRM,compiledRM));
+
+
+
+                    String graphQuery = resourceMap.getGraphQuery();
+                    graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
+                    Property cgqProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledGraphQuery");
+                    Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,cgqProperty,ResourceFactory.createPlainLiteral(graphQuery)));
+
+
+                    for (Map.Entry<String, DataSource> datasourceEntry : resourceMap.getDataSources().entrySet()) {
+                        DataSource dataSource = datasourceEntry.getValue();
+                        Resource ds = ResourceFactory.createResource(dataSource.getIRI());
+                        Property dsProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "dataSource");
+                        Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,dsProperty,ds));
+                        Model dsModel = dataSource.getSelfModel();
+                        Global.virtualModel = Global.virtualModel.union(dsModel);
+                    }
+                }
+            }
+
             genIDts.add(new GenID(newIRI,currentResourceIRI));
         }
         return new EvalResult(genIDts,ldpDD);

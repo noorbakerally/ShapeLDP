@@ -2,13 +2,14 @@ package loader.configuration;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Created by noor on 01/10/17.
  */
-public class RDFFileDataSource extends DataSource{
+public class RDFFileDataSource extends DataSource {
+    String liftingRuleLocation;
     public RDFFileDataSource(String dataSourceIRI){
         super(dataSourceIRI);
     }
@@ -38,6 +39,29 @@ public class RDFFileDataSource extends DataSource{
 
     public Model executeGraphQuery(String query) {
         return Global.exeGraphQuery(query,model);
+    }
+
+    public String getLiftingRuleLocation() {
+        return liftingRuleLocation;
+    }
+
+    public void setLiftingRuleLocation(String liftingRuleLocation) {
+        this.liftingRuleLocation = liftingRuleLocation;
+    }
+
+    @Override
+    public Model getSelfModel() {
+
+        Model self = super.getSelfModel();
+        Resource ds = ResourceFactory.createResource(getIRI());
+
+        if (liftingRuleLocation!=null){
+            Property liftingRule = ResourceFactory.createProperty(Global.vocabularyPrefix + "liftingRule");
+            Statement st3 = ResourceFactory.createStatement(ds, liftingRule, ResourceFactory.createPlainLiteral(getLiftingRuleLocation()));
+            self.add(st3);
+        }
+
+        return self;
     }
 
 
