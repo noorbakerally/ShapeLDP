@@ -36,4 +36,9 @@ public class SPARQLDataSource extends DataSource {
         QueryExecution qe = QueryExecutionFactory.sparqlService(this.location, queryStr);
         return qe.execConstruct();
     }
+
+    @Override
+    public Model getSelfModel() {
+        return super.getSelfModel();
+    }
 }

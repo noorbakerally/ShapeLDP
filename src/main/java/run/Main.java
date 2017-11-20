@@ -25,7 +25,8 @@ import java.util.logging.Logger;
 public class Main {
     public static void main(String [] args) throws URISyntaxException {
 
-        /*
+
+        Global.physical = false;
         ClassLoader classLoader = Main.class.getClassLoader();
         String base = "";
         Evaluation.base = base;
@@ -36,11 +37,16 @@ public class Main {
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), inputDataSource);
         Dataset ds = Evaluation.evalDD(dd,base);
         StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+
+
+
+        //RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+        RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
         String data = writer.toString();
         System.out.println(data);
-        */
 
+
+        /*
         CommandLine cl = null;
         try {
             cl = CMDConfigurations.parseArguments(args);
@@ -116,5 +122,7 @@ public class Main {
         } else {
             RDFDataMgr.write(System.out, ds, Lang.TRIG) ;
         }
+
+        */
     }
 }

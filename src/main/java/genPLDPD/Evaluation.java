@@ -183,15 +183,29 @@ public class Evaluation {
             }
 
             if (!Global.physical){
-                Resource newLDPResource = ResourceFactory.createResource(newIRI);
-                Resource compiledRM = ResourceFactory.createResource(resourceMap.getIRI()+"Compiled");
+                if (!resourceMap.getIRI().contains("nullResourceMap")) {
+                    Resource newLDPResource = ResourceFactory.createResource(newIRI);
 
-                String graphQuery = resourceMap.getGraphQuery();
-                graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
+                    Resource compiledRM = ResourceFactory.createResource();
+                    Property propertyRM = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledResourceMap");
+                    Global.virtualModel.add(ResourceFactory.createStatement(newLDPResource,propertyRM,compiledRM));
 
-                for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()) {
-                    DataSource dataSource = datasourceEntry.getValue();
 
+
+                    String graphQuery = resourceMap.getGraphQuery();
+                    graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
+                    Property cgqProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledGraphQuery");
+                    Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,cgqProperty,ResourceFactory.createPlainLiteral(graphQuery)));
+
+
+                    for (Map.Entry<String, DataSource> datasourceEntry : resourceMap.getDataSources().entrySet()) {
+                        DataSource dataSource = datasourceEntry.getValue();
+                        Resource ds = ResourceFactory.createResource(dataSource.getIRI());
+                        Property dsProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "dataSource");
+                        Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,dsProperty,ds));
+                        Model dsModel = dataSource.getSelfModel();
+                        Global.virtualModel = Global.virtualModel.union(dsModel);
+                    }
                 }
             }
 
