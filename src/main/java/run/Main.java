@@ -43,8 +43,7 @@ public class Main {
             inputDataSource = cl.getOptionValue("if");
             dataSource = new RDFFileDataSource("DefaulDataSource");
             dataSource.setLocation(inputDataSource);
-            System.out.println("Using default data source for all ResourceMap:"+inputDataSource);
-
+            LOGGER.info("Using default data source for all ResourceMap:"+inputDataSource);
             if (cl.hasOption("lf")){
                 String liftingRule = cl.getOptionValue("lf");
                 ((RDFFileDataSource)dataSource).setLiftingRuleLocation(liftingRule);
@@ -58,11 +57,11 @@ public class Main {
         if (cl.hasOption("d")){
             String designDocumentPath = cl.getOptionValue("d");
             try{
-                System.out.println("Loading the design documnent from:"+designDocumentPath);
+                LOGGER.info("Loading the design documnent from:"+designDocumentPath);
                 File file = new File(designDocumentPath);
                 dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(),dataSource);
             } catch (Exception exception){
-                System.out.println("Error while trying to load file:"+designDocumentPath);
+                LOGGER.info("Error while trying to load file:"+designDocumentPath);
             }
         }
 
@@ -71,11 +70,11 @@ public class Main {
         }
 
 
-        System.out.println("Evaluating design document:Started");
+        LOGGER.info("Evaluating design document:Started");
         long startTime = System.currentTimeMillis();
         Dataset ds = Evaluation.evalDD(dd,base);
         long endTime = System.currentTimeMillis();
-        System.out.println("Evaluating design document:Completed");
+        LOGGER.info("Evaluating design document:Completed");
         long timeTaken = endTime - startTime;
 
 
@@ -88,10 +87,10 @@ public class Main {
         if (cl.hasOption("o")){
             outputFile = cl.getOptionValue("o");
             if (outputFile.equals("0")){
-                System.out.println("No output for LDP Dataset");
+                LOGGER.info("No output for LDP Dataset");
             }
             else {
-                System.out.println("Writing LDPDataset to "+outputFile);
+                LOGGER.info("Writing LDPDataset to "+outputFile);
                 StringWriter writer = new StringWriter();
                 RDFDataMgr.write(writer, ds, Lang.TRIG) ;
                 String data = writer.toString();
@@ -119,9 +118,9 @@ public class Main {
 
         if (cl.hasOption("v")){
             String virtualFile = cl.getOptionValue("v");
-            System.out.println("virtual file"+virtualFile);
+            LOGGER.info("virtual file"+virtualFile);
             if (!virtualFile.equals("0")){
-                System.out.println("Writing virtual graph to "+virtualFile);
+                LOGGER.info("Writing virtual graph to "+virtualFile);
                 StringWriter writer = new StringWriter();
                 RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
                 String data = writer.toString();

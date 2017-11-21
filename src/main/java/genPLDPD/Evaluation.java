@@ -10,28 +10,34 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
+import run.Main;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by noor on 30/09/17.
  */
 public class Evaluation {
+    private static final Logger LOGGER = Logger.getLogger( Evaluation.class.getName() );
     public static String base;
     static Dataset ldpDD = DatasetFactory.create();
 
     public static Dataset evalDD(DesignDocument dd,String base){
+        LOGGER.info("Evaluation of design document");
+
         Map<String, NonContainerMap> nonContainerMaps = dd.getNonContainerMaps();
         Map<String, ContainerMap> containerMaps = dd.getContainerMaps();
         List <String> parents = new ArrayList<String>();
 
-
+        LOGGER.info("Evaluation of design document ContainerMaps");
         for (Map.Entry <String,ContainerMap> containerMapEntry:containerMaps.entrySet()){
             ContainerMap containerMap = containerMapEntry.getValue();
             EvalResult evalResult = evalCM(containerMap, new Container(base),parents);
             ldpDD = evalResult.getDs();
         }
 
+        LOGGER.info("Evaluation of NonContainerMaps");
         for (Map.Entry <String,NonContainerMap> nonContainerMapEntry:nonContainerMaps.entrySet()){
             NonContainerMap nonContainerMap = nonContainerMapEntry.getValue();
             EvalResult evalResult = evalNM(nonContainerMap, new Container(base), parents);
@@ -41,23 +47,31 @@ public class Evaluation {
     }
 
     public static EvalResult evalCM(ContainerMap containerMap, Container container,List <String> parents){
+        LOGGER.info("Evaluation of ContainerMap:"+containerMap.getIRI());
+
         List <GenID> genIDS = new ArrayList<GenID>();
+        LOGGER.info("Evaluation of all ResourceMaps for ContainerMap:"+containerMap.getIRI());
         for (Map.Entry <String,ResourceMap> resourceMapEntry:containerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
             EvalResult evalResult = evalRM(currentResourceMap, containerMap, container,new ArrayList<String>(parents));
             ldpDD = evalResult.getDs();
             genIDS.addAll(evalResult.getGenIDs());
         }
+
         for (GenID genID:genIDS){
             String newIRI = genID.getLdprIRI();
             String resourceIRI = genID.getRdfResourceIRI();
             List <String> newparents1 = new ArrayList<String>(parents);
             newparents1.add(resourceIRI);
+
+            LOGGER.info("Evaluation of all child ContainerMap for ContainerMap:"+containerMap.getIRI());
             for (Map.Entry <String,ContainerMap> cmEntry:containerMap.getContainerMaps().entrySet()){
                 ContainerMap cm = cmEntry.getValue();
                 EvalResult evalResult = evalCM(cm, new Container(newIRI), new ArrayList<String>(newparents1));
                 ldpDD = evalResult.getDs();
             }
+
+            LOGGER.info("Evaluation of all NonContainerMap for ContainerMap:"+containerMap.getIRI());
             for (Map.Entry <String,NonContainerMap> ncmEntry:containerMap.getNonContainerMaps().entrySet()){
                 NonContainerMap ncm = ncmEntry.getValue();
                 EvalResult evalResult = evalNM(ncm, new Container(newIRI), new ArrayList<String>(newparents1));
@@ -69,6 +83,7 @@ public class Evaluation {
     }
 
     public static EvalResult evalNM(NonContainerMap nonContainerMap, Container container,List <String> parents){
+        LOGGER.info("Evaluation of NonContainerMap:"+nonContainerMap.getIRI());
         List <GenID> genIDS = new ArrayList<GenID>();
         for (Map.Entry <String,ResourceMap> resourceMapEntry:nonContainerMap.getResourceMaps().entrySet()){
             ResourceMap currentResourceMap = resourceMapEntry.getValue();
@@ -81,6 +96,7 @@ public class Evaluation {
     }
 
     public static EvalResult evalRM(ResourceMap resourceMap,HasResourceMap parentMap,Container container, List <String> parents){
+        LOGGER.info("Evaluation of ResourceMap:"+resourceMap.getIRI()+" for Map:"+parentMap.getIRI());
 
         //increase the number of resource maps executed
         Global.resourceMapsExecuted = Global.resourceMapsExecuted +1;
@@ -100,6 +116,7 @@ public class Evaluation {
         //for each data source, execute the resource query, get all the resources,
         //create a map for the resources with their model
         //get the graph of the resources from the data source from which they were generated
+        LOGGER.info("Retrieving related resources from DataSource for ResourceMap:"+resourceMap.getIRI());
         for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()){
             DataSource dataSource = datasourceEntry.getValue();
             ResultSet rs = dataSource.executeResourceQuery(finalQuery);
@@ -130,6 +147,8 @@ public class Evaluation {
             }
 
         }
+        LOGGER.info("Related resources retrieved from DataSource for ResourceMap:"+resourceMap.getIRI());
+
 
         //iterate through all resources generated from datasources
         for (Map.Entry<String,RDFResource> rdfResourceEntry:resources.entrySet()){
