@@ -4,30 +4,17 @@ import genPLDPD.Evaluation;
 import loader.configuration.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.Dataset;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-
-
-
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
  * Created by bakerally on 11/7/17.
  */
 public class Main {
+    private static final Logger LOGGER = Logger.getLogger( Main.class.getName() );
     public static void main(String [] args)  {
        CommandLine cl = null;
         try {
@@ -48,6 +35,8 @@ public class Main {
         String outputFile = null;
 
         String inputDataSource = null;
+
+        LOGGER.info("Checking for main data source");
 
         DataSource dataSource = null;
         if (cl.hasOption("if")){
