@@ -62,7 +62,7 @@ public class Main {
             }
         } else if (cl.hasOption("se")){
             inputDataSource = cl.getOptionValue("se");
-            dataSource  = new SPARQLDataSource(inputDataSource);
+            dataSource  = new SPARQLDataSource("DefaulDataSource",inputDataSource);
         }
 
         
