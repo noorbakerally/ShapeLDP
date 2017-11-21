@@ -3,15 +3,11 @@ package genPLDPD;
 import ldp.Container;
 import ldp.RDFResource;
 import loader.configuration.*;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.atlas.lib.ListUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 

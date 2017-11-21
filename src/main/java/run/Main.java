@@ -90,7 +90,6 @@ public class Main {
         }
 
 
-        
         System.out.println("Evaluating design document:Started");
         long startTime = System.currentTimeMillis();
         Dataset ds = Evaluation.evalDD(dd,base);
