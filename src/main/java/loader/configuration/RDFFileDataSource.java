@@ -52,17 +52,14 @@ public class RDFFileDataSource extends DataSource {
     }
 
     public void load(){
-        if (super.getIRI().equals("DefaulDatasource")){
-            model = Global.defaultmodel;
-        } else if (model==null){
-            System.out.println("Load non default model");
-            if (liftingRuleLocation == null){
+
+        if (model == null){
+            if (liftingRuleLocation==null){
                 model = ModelFactory.createDefaultModel();
                 model.read(location);
-            }  else {
-
+            } else {
+                //loading the model via the lifting ruke
                 try {
-
                     //loading the lifting rule
                     InputStream inputStream = new URL(liftingRuleLocation).openStream();
                     String queryString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
@@ -89,30 +86,26 @@ public class RDFFileDataSource extends DataSource {
                     this.model = ModelFactory.createDefaultModel();
                     this.model.read(new ByteArrayInputStream(output.getBytes()) ,null,Lang.TURTLE.getLabel());
 
-
-
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
-                /*
-                InputStream inputStream = null;
-                try {
-                    inputStream = new URL(liftingRuleLocation).openStream();
-                    String queryString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-                    SPARQLGenerateQuery query = (SPARQLGenerateQuery) QueryFactory.create(queryString, SPARQLGenerate.SYNTAX);
-                    PlanFactory planFactory = new PlanFactory();
-                    RootPlan plan = planFactory.create(query);
-                    model = plan.exec();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
-
             }
         }
+
+        /* IF SPARQL Generate JAR is used
+        InputStream inputStream = null;
+        try {
+            inputStream = new URL(liftingRuleLocation).openStream();
+            String queryString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            SPARQLGenerateQuery query = (SPARQLGenerateQuery) QueryFactory.create(queryString, SPARQLGenerate.SYNTAX);
+            PlanFactory planFactory = new PlanFactory();
+            RootPlan plan = planFactory.create(query);
+            model = plan.exec();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     public ResultSet executeResourceQuery(String query) {

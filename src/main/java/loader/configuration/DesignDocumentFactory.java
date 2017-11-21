@@ -24,15 +24,22 @@ public class DesignDocumentFactory {
 
     private static Map <String,ContainerMap> containerMaps = new HashMap<String, ContainerMap>();
     private static Map <String,NonContainerMap> nonContainerMaps = new HashMap<String, NonContainerMap>();
-    static String defaultInputDataSource = null;
     private static Map <String,DataSource> dataSourceMaps = new HashMap<String, DataSource>();
+    private static  DataSource mainDataSource;
 
 
-    public  static DesignDocument createDDFromFile(String ddLocation,String inputdatasource){
-        defaultInputDataSource= inputdatasource;
+
+    public static DesignDocument createDDFromFile(String ddLocation, DataSource dataSource){
+
 
         designDocument = new DesignDocument();
+
+        //loading the design document into a model
         model = RDFDataMgr.loadModel(ddLocation);
+
+        //setting the default datasource
+        mainDataSource = dataSource;
+        dataSourceMaps.put(mainDataSource.getIRI(),mainDataSource);
 
 
         //getting the defined prefixes from the design document
@@ -302,13 +309,11 @@ public class DesignDocumentFactory {
                 resourceMap.setResourceQuery(o);
             }
 
-            if (defaultInputDataSource !=null){
+
+            if (mainDataSource !=null){
                 if (!resourceMap.dataSources.containsKey("DefaulDatasource")){
-                    String dataSourceIRI = "DefaulDatasource";
-                    DataSource dataSource = new RDFFileDataSource(dataSourceIRI);
-                    dataSource.setLocation(defaultInputDataSource);
                     resourceMap.dataSources.clear();
-                    resourceMap.addDataSource(dataSource);
+                    resourceMap.addDataSource(mainDataSource);
                 }
             }
 

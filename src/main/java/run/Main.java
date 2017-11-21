@@ -30,16 +30,20 @@ import java.util.logging.Logger;
 public class Main {
     public static void main(String [] args)  {
 
-        /*
+
         Global.physical = true;
         ClassLoader classLoader = Main.class.getClassLoader();
         String base = "";
         Evaluation.base = base;
-        //String inputDataSource = "https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl";
-        //Model model = ModelFactory.createDefaultModel();
-        //Global.defaultmodel = model.read(inputDataSource);
-        File file = new File(classLoader.getResource("Test3.ttl").getFile());
-        DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), null);
+
+        Model model = ModelFactory.createDefaultModel();
+
+
+        DataSource mainDataSource = new RDFFileDataSource("DefaultDataSource");
+        mainDataSource.setLocation("https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl");
+
+        File file = new File(classLoader.getResource("Test2.ttl").getFile());
+        DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), mainDataSource);
         Dataset ds = Evaluation.evalDD(dd,base);
         StringWriter writer = new StringWriter();
 
@@ -48,15 +52,17 @@ public class Main {
         //RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
         String data = writer.toString();
         System.out.println(data);
-        */
+        System.out.println("test");
 
 
-       CommandLine cl = null;
+       /*CommandLine cl = null;
         try {
             cl = CMDConfigurations.parseArguments(args);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+
         if (cl.getOptions().length == 0){
             CMDConfigurations.displayHelp();
             return;
@@ -161,6 +167,6 @@ public class Main {
                 out.print(data);
                 out.flush();
             }
-        }
+        }*/
     }
 }

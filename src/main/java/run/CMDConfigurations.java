@@ -24,7 +24,9 @@ public class CMDConfigurations {
                     .addOption("o", "outputfile", true, "Path to LDP dataset")
                     .addOption("d", "designDocument", true, "Path to design document")
                     .addOption("s","sourcesDocument",true,"source document describing the data sources")
-                    .addOption("is","mainInputSource",true,"main input source for all resource map")
+                    .addOption("if","inputFile",true,"URL for a file as the main input source")
+                    .addOption("lf","liftingRule",true,"lifting rule for main input source")
+                    .addOption("se","sparqlEndpoint",true,"URL for a SPARQL endpoint to act as main input source")
                     .addOption("l", false, "Disable logging, by default logging is enabled")
                     .addOption("v", "virtualGraph",true, "Path to virtual graph")
                     ;
