@@ -37,10 +37,11 @@ public class DesignDocumentFactory {
         //loading the design document into a model
         model = RDFDataMgr.loadModel(ddLocation);
 
-        //setting the default datasource
-        mainDataSource = dataSource;
-        dataSourceMaps.put(mainDataSource.getIRI(),mainDataSource);
-
+        //setting the default datasource if there is one
+        if (dataSource != null){
+            mainDataSource = dataSource;
+            dataSourceMaps.put(mainDataSource.getIRI(),mainDataSource);
+        }
 
         //getting the defined prefixes from the design document
         Global.prefixMap = PrefixMapping.Factory.create();
@@ -250,6 +251,7 @@ public class DesignDocumentFactory {
                 "WHERE { " +
                 "<"+resourceMap.getIRI()+"> :dataSource ?dataSourceIRI . "+
                 "?dataSourceIRI ?p ?o ." +
+                "?dataSourceIRI a ?type ." +
                 "}";
         ResultSet rs = Global.exeQuery(dataSourceQuery, model);
         //System.out.println(ResultSetFormatter.asText(rs));
@@ -258,12 +260,17 @@ public class DesignDocumentFactory {
             QuerySolution qs = rs.next();
             String p = qs.get("?p").toString();
             String o = qs.get("?o").toString();
+            String type = qs.get("?type").toString();
             String dataSourceIRI = qs.get("?dataSourceIRI").toString();
 
             DataSource dataSource = resourceMap.getDataSources().get(dataSourceIRI);
 
             if (dataSource == null){
-                dataSource = new RDFFileDataSource(dataSourceIRI);
+                if (Global.getVTerm("SPARQLDataSource").equals(type)){
+                    dataSource = new SPARQLDataSource(dataSourceIRI);
+                } else {
+                    dataSource = new RDFFileDataSource(dataSourceIRI);
+                }
                 resourceMap.getDataSources().put(dataSourceIRI,dataSource);
             }
 

@@ -33,11 +33,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by noor on 01/10/17.
  */
 public class RDFFileDataSource extends DataSource {
+    private static final Logger LOGGER = Logger.getLogger(RDFFileDataSource.class.getSimpleName());
+
     String liftingRuleLocation;
     public RDFFileDataSource(String dataSourceIRI){
         super(dataSourceIRI);
@@ -62,6 +65,7 @@ public class RDFFileDataSource extends DataSource {
                 try {
                     //loading the lifting rule
                     InputStream inputStream = new URL(liftingRuleLocation).openStream();
+                    LOGGER.info("Fetching lifting rule from:"+liftingRuleLocation);
                     String queryString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
                     //creating the post request
@@ -75,6 +79,7 @@ public class RDFFileDataSource extends DataSource {
                     post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                     //sending the request to SPARQL Generate API
+                    LOGGER.info("Sending request for transformation to SPARQL Generate API");
                     HttpResponse response = client.execute(post);
                     String result = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
@@ -85,6 +90,7 @@ public class RDFFileDataSource extends DataSource {
                     //loading the model
                     this.model = ModelFactory.createDefaultModel();
                     this.model.read(new ByteArrayInputStream(output.getBytes()) ,null,Lang.TURTLE.getLabel());
+                    LOGGER.info("Model loaded");
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
