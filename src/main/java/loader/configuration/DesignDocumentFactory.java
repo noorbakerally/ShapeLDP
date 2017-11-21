@@ -10,6 +10,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.vocabulary.RDF;
 
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -24,6 +25,9 @@ public class DesignDocumentFactory {
     private static Map <String,ContainerMap> containerMaps = new HashMap<String, ContainerMap>();
     private static Map <String,NonContainerMap> nonContainerMaps = new HashMap<String, NonContainerMap>();
     static String defaultInputDataSource = null;
+    private static Map <String,DataSource> dataSourceMaps = new HashMap<String, DataSource>();
+
+
     public  static DesignDocument createDDFromFile(String ddLocation,String inputdatasource){
         defaultInputDataSource= inputdatasource;
 
@@ -117,6 +121,12 @@ public class DesignDocumentFactory {
 
         setContainerMapAttributes();
         setNonContainerMapAttributes();
+
+
+        //loading all datasources
+        for (Map.Entry <String,DataSource> dataSourceEntry:dataSourceMaps.entrySet()){
+            dataSourceEntry.getValue().load();
+        }
 
         return designDocument;
     }
@@ -253,6 +263,11 @@ public class DesignDocumentFactory {
             if (Global.getVTerm("location").equals(p)) {
                 dataSource.setLocation(o);
             }
+
+            if (Global.getVTerm("liftingRule").equals(p)) {
+                ((RDFFileDataSource)dataSource).setLiftingRuleLocation(o);
+            }
+            dataSourceMaps.put(dataSource.getIRI(),dataSource);
         }
 
     }

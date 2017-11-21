@@ -1,9 +1,5 @@
 package run;
 
-import com.github.thesmartenergy.sparql.generate.jena.SPARQLGenerate;
-import com.github.thesmartenergy.sparql.generate.jena.engine.PlanFactory;
-import com.github.thesmartenergy.sparql.generate.jena.engine.RootPlan;
-import com.github.thesmartenergy.sparql.generate.jena.query.SPARQLGenerateQuery;
 import genPLDPD.Evaluation;
 import loader.configuration.*;
 import org.apache.commons.cli.CommandLine;
@@ -34,27 +30,28 @@ import java.util.logging.Logger;
 public class Main {
     public static void main(String [] args)  {
 
-       /* Global.physical = false;
+        /*
+        Global.physical = true;
         ClassLoader classLoader = Main.class.getClassLoader();
         String base = "";
         Evaluation.base = base;
-        String inputDataSource = "https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl";
-        Model model = ModelFactory.createDefaultModel();
-        Global.defaultmodel = model.read(inputDataSource);
-        File file = new File(classLoader.getResource("Test1.ttl").getFile());
-        DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), inputDataSource);
+        //String inputDataSource = "https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl";
+        //Model model = ModelFactory.createDefaultModel();
+        //Global.defaultmodel = model.read(inputDataSource);
+        File file = new File(classLoader.getResource("Test3.ttl").getFile());
+        DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), null);
         Dataset ds = Evaluation.evalDD(dd,base);
         StringWriter writer = new StringWriter();
 
 
-        //RDFDataMgr.write(writer, ds, Lang.TRIG) ;
-        RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
+        RDFDataMgr.write(writer, ds, Lang.TRIG) ;
+        //RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
         String data = writer.toString();
-        System.out.println(data);*/
+        System.out.println(data);
+        */
 
 
-
-       /* CommandLine cl = null;
+       CommandLine cl = null;
         try {
             cl = CMDConfigurations.parseArguments(args);
         } catch (ParseException e) {
@@ -165,6 +162,6 @@ public class Main {
                 out.print(data);
                 out.flush();
             }
-        }*/
+        }
     }
 }

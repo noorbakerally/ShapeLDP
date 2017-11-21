@@ -34,6 +34,7 @@ public abstract class DataSource {
 
     public abstract void setLocation(String location);
 
+    public abstract void load();
 
     public Model getModel() {
         return model;

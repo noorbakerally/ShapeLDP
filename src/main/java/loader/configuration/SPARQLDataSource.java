@@ -24,6 +24,11 @@ public class SPARQLDataSource extends DataSource {
     }
 
     @Override
+    public void load() {
+
+    }
+
+    @Override
     public ResultSet executeResourceQuery(String queryStr) {
         queryStr = Global.prefixes + queryStr;
         QueryExecution qe = QueryExecutionFactory.sparqlService(this.location, queryStr);

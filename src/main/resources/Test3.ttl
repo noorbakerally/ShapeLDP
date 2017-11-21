@@ -1,0 +1,21 @@
+@prefix :     <http://opensensingcity.emse.fr/LDPDesignVocabulary/> .
+@prefix data:     <http://opensensingcity.emse.fr/LDPDesign/data/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+data:catalogCM a :ContainerMap;
+    :iriTemplate "$path(res,0)$";
+    :resourceMap data:catalogRM;
+.
+
+data:catalogRM a :ResourceMap;
+    :resourceQuery "{ ?x a ?res .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }" ;
+    :dataSource data:DataSource1;
+
+.
+
+data:DataSource1 a :DataSource;
+    :location "http://country.io/capital.json";
+    :liftingRule "https://raw.githubusercontent.com/thesmartenergy/sparql-generate/master/sparql-generate-jena/src/test/resources/capital/query.rqg";
+
+.

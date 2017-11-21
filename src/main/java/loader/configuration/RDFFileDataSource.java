@@ -1,20 +1,38 @@
 package loader.configuration;
 
-import com.github.thesmartenergy.sparql.generate.jena.SPARQLGenerate;
+/*import com.github.thesmartenergy.sparql.generate.jena.SPARQLGenerate;
 import com.github.thesmartenergy.sparql.generate.jena.engine.PlanFactory;
 import com.github.thesmartenergy.sparql.generate.jena.engine.RootPlan;
-import com.github.thesmartenergy.sparql.generate.jena.query.SPARQLGenerateQuery;
+import com.github.thesmartenergy.sparql.generate.jena.query.SPARQLGenerateQuery;*/
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.jena.atlas.json.JSON;
+import org.apache.jena.atlas.json.JsonObject;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDF;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by noor on 01/10/17.
@@ -24,17 +42,16 @@ public class RDFFileDataSource extends DataSource {
     public RDFFileDataSource(String dataSourceIRI){
         super(dataSourceIRI);
     }
+
     public RDFFileDataSource(String dataSourceIRI,String location) {
         super(dataSourceIRI,location);
-        loadModel();
     }
 
     public void setLocation(String location) {
         this.location = location;
-        loadModel();
     }
 
-    public void loadModel(){
+    public void load(){
         if (super.getIRI().equals("DefaulDatasource")){
             model = Global.defaultmodel;
         } else if (model==null){
@@ -42,7 +59,46 @@ public class RDFFileDataSource extends DataSource {
             if (liftingRuleLocation == null){
                 model = ModelFactory.createDefaultModel();
                 model.read(location);
-            } else {
+            }  else {
+
+                try {
+
+                    //loading the lifting rule
+                    InputStream inputStream = new URL(liftingRuleLocation).openStream();
+                    String queryString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+
+                    //creating the post request
+                    HttpClient client = HttpClientBuilder.create().build();
+                    String url = "https://ci.mines-stetienne.fr/sparql-generate/api/transform";
+                    HttpPost post = new HttpPost(url);
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+                    nameValuePairs.add(new BasicNameValuePair("query",
+                            queryString));
+                    post.setHeader("Content-type","application/x-www-form-urlencoded");
+                    post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                    //sending the request to SPARQL Generate API
+                    HttpResponse response = client.execute(post);
+                    String result = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+
+                    //deconding ther response
+                    JsonObject obj = JSON.parse(result);
+                    String output = obj.get("output").getAsString().value();
+
+                    //loading the model
+                    this.model = ModelFactory.createDefaultModel();
+                    this.model.read(new ByteArrayInputStream(output.getBytes()) ,null,Lang.TURTLE.getLabel());
+
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                /*
                 InputStream inputStream = null;
                 try {
                     inputStream = new URL(liftingRuleLocation).openStream();
@@ -53,7 +109,8 @@ public class RDFFileDataSource extends DataSource {
                     model = plan.exec();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
+
             }
         }
     }
@@ -88,6 +145,4 @@ public class RDFFileDataSource extends DataSource {
 
         return self;
     }
-
-
 }
