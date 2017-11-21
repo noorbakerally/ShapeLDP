@@ -1,0 +1,11 @@
+@prefix : <http://opensensingcity.emse.fr/LDPDesignVocabulary/> .
+@prefix data: <http://opensensingcity.emse.fr/LDPDesign/data/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#>
+
+data:classCM a :ContainerMap;
+    :iriTemplate "$path(res,0)$";
+    :resourceMap data:classRM .
+
+data:classRM a :ResourceMap;
+    :resourceQuery "{ ?x a ?res .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }" .

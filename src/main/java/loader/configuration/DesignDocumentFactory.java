@@ -311,7 +311,7 @@ public class DesignDocumentFactory {
 
 
             if (mainDataSource !=null){
-                if (!resourceMap.dataSources.containsKey("DefaulDatasource")){
+                if (!resourceMap.dataSources.containsKey("DefaulDataSource")){
                     resourceMap.dataSources.clear();
                     resourceMap.addDataSource(mainDataSource);
                 }

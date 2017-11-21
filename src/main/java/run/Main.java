@@ -29,33 +29,7 @@ import java.util.logging.Logger;
  */
 public class Main {
     public static void main(String [] args)  {
-
-
-        Global.physical = true;
-        ClassLoader classLoader = Main.class.getClassLoader();
-        String base = "";
-        Evaluation.base = base;
-
-        Model model = ModelFactory.createDefaultModel();
-
-
-        DataSource mainDataSource = new RDFFileDataSource("DefaultDataSource");
-        mainDataSource.setLocation("https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl");
-
-        File file = new File(classLoader.getResource("Test2.ttl").getFile());
-        DesignDocument dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(), mainDataSource);
-        Dataset ds = Evaluation.evalDD(dd,base);
-        StringWriter writer = new StringWriter();
-
-
-        RDFDataMgr.write(writer, ds, Lang.TRIG) ;
-        //RDFDataMgr.write(writer, Global.virtualModel, Lang.TURTLE) ;
-        String data = writer.toString();
-        System.out.println(data);
-        System.out.println("test");
-
-
-       /*CommandLine cl = null;
+       CommandLine cl = null;
         try {
             cl = CMDConfigurations.parseArguments(args);
         } catch (ParseException e) {
@@ -74,18 +48,30 @@ public class Main {
         String outputFile = null;
 
         String inputDataSource = null;
-        if (cl.hasOption("is")){
-            inputDataSource = cl.getOptionValue("is");
-            Model model = ModelFactory.createDefaultModel();
-            Global.defaultmodel = model.read(inputDataSource);
+
+        DataSource dataSource = null;
+        if (cl.hasOption("if")){
+            inputDataSource = cl.getOptionValue("if");
+            dataSource = new RDFFileDataSource("DefaulDataSource");
+            dataSource.setLocation(inputDataSource);
             System.out.println("Using default data source for all ResourceMap:"+inputDataSource);
+
+            if (cl.hasOption("lf")){
+                String liftingRule = cl.getOptionValue("lf");
+                ((RDFFileDataSource)dataSource).setLiftingRuleLocation(liftingRule);
+            }
+        } else if (cl.hasOption("se")){
+            inputDataSource = cl.getOptionValue("se");
+            dataSource  = new SPARQLDataSource(inputDataSource);
         }
+
+        
         if (cl.hasOption("d")){
             String designDocumentPath = cl.getOptionValue("d");
             try{
                 System.out.println("Loading the design documnent from:"+designDocumentPath);
                 File file = new File(designDocumentPath);
-                dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(),inputDataSource);
+                dd = DesignDocumentFactory.createDDFromFile(file.getAbsolutePath(),dataSource);
             } catch (Exception exception){
                 System.out.println("Error while trying to load file:"+designDocumentPath);
             }
@@ -167,6 +153,7 @@ public class Main {
                 out.print(data);
                 out.flush();
             }
-        }*/
+        }
+
     }
 }

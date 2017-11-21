@@ -18,7 +18,6 @@ import java.util.*;
  */
 public class Evaluation {
     public static String base;
-    static Model virtualModel = ModelFactory.createDefaultModel();
     static Dataset ldpDD = DatasetFactory.create();
 
     public static Dataset evalDD(DesignDocument dd,String base){
@@ -184,23 +183,23 @@ public class Evaluation {
 
                     Resource compiledRM = ResourceFactory.createResource();
                     Property propertyRM = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledResourceMap");
-                    virtualModel.add(ResourceFactory.createStatement(newLDPResource,propertyRM,compiledRM));
+                    Global.virtualModel.add(ResourceFactory.createStatement(newLDPResource,propertyRM,compiledRM));
 
 
 
                     String graphQuery = resourceMap.getGraphQuery();
                     graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
                     Property cgqProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledGraphQuery");
-                    virtualModel.add(ResourceFactory.createStatement(compiledRM,cgqProperty,ResourceFactory.createPlainLiteral(graphQuery)));
+                    Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,cgqProperty,ResourceFactory.createPlainLiteral(graphQuery)));
 
 
                     for (Map.Entry<String, DataSource> datasourceEntry : resourceMap.getDataSources().entrySet()) {
                         DataSource dataSource = datasourceEntry.getValue();
                         Resource ds = ResourceFactory.createResource(dataSource.getIRI());
                         Property dsProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "dataSource");
-                        virtualModel.add(ResourceFactory.createStatement(compiledRM,dsProperty,ds));
+                        Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,dsProperty,ds));
                         Model dsModel = dataSource.getSelfModel();
-                        virtualModel = virtualModel.union(dsModel);
+                        Global.virtualModel = Global.virtualModel.union(dsModel);
                     }
                 }
             }
