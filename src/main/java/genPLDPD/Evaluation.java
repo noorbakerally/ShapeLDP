@@ -3,10 +3,7 @@ package genPLDPD;
 import ldp.Container;
 import ldp.RDFResource;
 import loader.configuration.*;
-import org.apache.jena.query.Dataset;
-import org.apache.jena.query.DatasetFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
@@ -208,6 +205,14 @@ public class Evaluation {
                     String graphQuery = resourceMap.getGraphQuery();
                     graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
                     Property cgqProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledGraphQuery");
+
+                    //expand the prefixes
+                    Query gq = QueryFactory.create(Global.prefixes + graphQuery);
+                    gq.setPrefixMapping(Global.prefixMap);
+                    gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+                    graphQuery = gq.serialize();
+
+
                     Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,cgqProperty,ResourceFactory.createPlainLiteral(graphQuery)));
 
 
