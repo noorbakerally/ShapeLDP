@@ -1,8 +1,6 @@
 package loader.configuration;
 
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 
@@ -31,15 +29,19 @@ public class SPARQLDataSource extends DataSource {
 
     @Override
     public ResultSet executeResourceQuery(String queryStr) {
-        queryStr = Global.prefixes + queryStr;
-        QueryExecution qe = QueryExecutionFactory.sparqlService(this.location, queryStr);
+        Query gq = QueryFactory.create(Global.prefixes + queryStr);
+        gq.setPrefixMapping(Global.prefixMap);
+        gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+        QueryExecution qe = QueryExecutionFactory.sparqlService(this.location, gq.serialize());
         return qe.execSelect();
     }
 
     @Override
     public Model executeGraphQuery(String queryStr) {
-        queryStr = Global.prefixes + queryStr;
-        QueryExecution qe = QueryExecutionFactory.sparqlService(this.location, queryStr);
+        Query gq = QueryFactory.create(Global.prefixes + queryStr);
+        gq.setPrefixMapping(Global.prefixMap);
+        gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+        QueryExecution qe = QueryExecutionFactory.sparqlService(this.location, gq.serialize());
         return qe.execConstruct();
     }
 

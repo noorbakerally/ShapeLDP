@@ -17,7 +17,7 @@ data:distributionNM a :NonContainerMap;
     :resourceMap data:distributionRM .
 
 data:distributionRM a :ResourceMap;
-    :resourceQuery "{ $parent$ dcat:distribution ?res .} LIMIT 1";
+    :resourceQuery "{ ?{parent} dcat:distribution ?res .} LIMIT 1";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }" .
 
 data:catalogRM a :ResourceMap;
