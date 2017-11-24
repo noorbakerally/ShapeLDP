@@ -13,21 +13,25 @@ public interface GenIRIConstants {
   /** RegularExpression Id. */
   int NUMBER = 5;
   /** RegularExpression Id. */
-  int PATH = 6;
+  int PPATH = 6;
   /** RegularExpression Id. */
-  int RES = 7;
+  int PATH = 7;
   /** RegularExpression Id. */
-  int RPAR = 8;
+  int RES = 8;
   /** RegularExpression Id. */
-  int LPAR = 9;
+  int RESG = 9;
   /** RegularExpression Id. */
-  int QUOTE = 10;
+  int RPAR = 10;
   /** RegularExpression Id. */
-  int COMMA = 11;
+  int LPAR = 11;
   /** RegularExpression Id. */
-  int ECHAR = 12;
+  int QUOTE = 12;
   /** RegularExpression Id. */
-  int STRING_LITERAL1 = 13;
+  int COMMA = 13;
+  /** RegularExpression Id. */
+  int ECHAR = 14;
+  /** RegularExpression Id. */
+  int STRING_LITERAL1 = 15;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -40,8 +44,10 @@ public interface GenIRIConstants {
     "\"\\t\"",
     "\"\\n\"",
     "<NUMBER>",
+    "\"ppath\"",
     "\"path\"",
     "\"res\"",
+    "\"res.graph\"",
     "\"(\"",
     "\")\"",
     "\"\\\'\"",

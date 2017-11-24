@@ -4,6 +4,8 @@ options
 PARSER_BEGIN(GenIRI)
 package geniri.iri;
 import java.net.URI;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
 public class GenIRI
 {
 
@@ -20,8 +22,10 @@ SKIP :
 TOKEN:
 {
     < NUMBER: (["0"-"9"])+  > |
+    <PPATH: "ppath" > |
     <PATH: "path"> |
     <RES: "res"> |
+    <RESG: "res.graph"> |
     <RPAR: "("> |
     <LPAR: ")"> |
     <QUOTE: "'"> |
@@ -34,6 +38,8 @@ String expr(Object obj):
 {
 	String leftValue ;
     int rightValue ;
+	String ppath;
+	Model graph;
 }
 {
     <PATH> <RPAR> ( leftValue = res(obj) | leftValue = str() ) <COMMA> rightValue = num() <LPAR>
@@ -43,7 +49,23 @@ String expr(Object obj):
         String result = pathParts[rightValue+1];
 	    return result;
 
+	} | 
+  
+    <PPATH> <RPAR> graph = resGraph(obj) <COMMA> ppath = str() <LPAR>
+	{ 
+		return ppath;
+	
 	}
+
+}
+Model resGraph(Object obj):
+{
+    Token t;
+}
+{
+    t = <RESG> {
+        return (Model)obj;
+    }
 }
 
 String res(Object obj):
