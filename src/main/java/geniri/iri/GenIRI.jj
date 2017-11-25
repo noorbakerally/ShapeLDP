@@ -4,8 +4,22 @@ options
 PARSER_BEGIN(GenIRI)
 package geniri.iri;
 import java.net.URI;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.core.TriplePath;
+import org.apache.jena.sparql.path.Path;
+import org.apache.jena.sparql.path.PathParser;
+import org.apache.jena.sparql.syntax.ElementPathBlock;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.jena.query.ResultSet;
+import loader.configuration.Global;
+import java.util.Random;
 public class GenIRI
 {
 
@@ -23,6 +37,9 @@ TOKEN:
 {
     < NUMBER: (["0"-"9"])+  > |
     <PPATH: "ppath" > |
+    <CONCAT: "concat" > |
+    <REPLACE: "replace" > |
+    <SPLIT: "split" > |
     <PATH: "path"> |
     <RES: "res"> |
     <RESG: "res.graph"> |
@@ -40,6 +57,17 @@ String expr(Object obj):
     int rightValue ;
 	String ppath;
 	Model graph;
+
+	String concatLeftValue;
+	String concatRightValue;
+
+	String replace1;
+	String replace2;
+	String replace3;
+
+	String split1;
+    String split2;
+    int split3;
 }
 {
     <PATH> <RPAR> ( leftValue = res(obj) | leftValue = str() ) <COMMA> rightValue = num() <LPAR>
@@ -49,14 +77,52 @@ String expr(Object obj):
         String result = pathParts[rightValue+1];
 	    return result;
 
-	} | 
-  
-    <PPATH> <RPAR> graph = resGraph(obj) <COMMA> ppath = str() <LPAR>
-	{ 
-		return ppath;
-	
 	}
+	|
+    <PPATH> <RPAR> graph = resGraph(obj) <COMMA> ppath = str() <LPAR>
+	{
 
+	    List <Object> objs = (List) obj;
+	    String resIRI = (String)objs.get(1);
+        PrefixMapping prefixMap = (PrefixMapping)objs.get(2);
+        Path p = PathParser.parse(ppath, prefixMap);
+        Query query = new Query();
+        query.setQuerySelectType();
+        Node oResource = NodeFactory.createURI(resIRI);
+        Node res = NodeFactory.createVariable("result");
+        TriplePath triplePattern = new TriplePath(oResource,p,res);
+        ElementPathBlock tp = new ElementPathBlock();
+        tp.addTriplePath(triplePattern);
+        query.setQueryPattern(tp);
+        query.setQueryResultStar(true);
+
+        ResultSet rs = Global.exeQuery(query.serialize(), graph);
+        while (rs.hasNext()){
+            String varResult = rs.next().get("?result").toString();
+            return varResult;
+        }
+
+        //Random rand = new Random();
+        //return String.valueOf(rand.nextLong());
+
+        return null;
+	}
+	|
+	<CONCAT> <RPAR> (concatLeftValue = str() | concatLeftValue = expr(obj) ) <COMMA> (concatRightValue = str() | concatRightValue = expr(obj) ) <LPAR>
+    {
+        return concatLeftValue+concatRightValue;
+    }
+    |
+    <REPLACE> <RPAR> (replace1 = str() | replace1 = expr(obj) ) <COMMA> (replace2 = str() | replace2 = expr(obj) ) <COMMA> (replace3 = str() | replace3 = expr(obj) ) <LPAR>
+    {
+        return replace1.replace(replace2,replace3);
+    }
+
+    |
+    <SPLIT> <RPAR> (split1 = str() | split1 = expr(obj) ) <COMMA> (split2 = str() | split2 = expr(obj) ) <COMMA> split3 = num() <LPAR>
+    {
+        return split1.split(split2)[split3];
+    }
 }
 Model resGraph(Object obj):
 {
@@ -64,7 +130,9 @@ Model resGraph(Object obj):
 }
 {
     t = <RESG> {
-        return (Model)obj;
+        List <Object> objs = (List) obj;
+        Model objModel = (Model)objs.get(0);
+        return objModel;
     }
 }
 
@@ -85,7 +153,11 @@ String str():
 }
 {
 
-    t = <STRING_LITERAL1> { return t.toString(); }
+    t = <STRING_LITERAL1> {
+        String resStr = t.toString();
+        resStr = resStr.substring(1,resStr.length()-1);
+        return resStr;
+    }
 }
 
 int num():

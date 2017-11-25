@@ -1,5 +1,4 @@
 package genPLDPD;
-
 import ldp.Container;
 import ldp.RDFResource;
 import loader.configuration.*;
