@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.jena.query.ResultSet;
 import loader.configuration.Global;
+import org.apache.jena.query.QueryFactory;
 import java.util.Random;
 public class GenIRI implements GenIRIConstants {
 
@@ -35,6 +36,8 @@ public class GenIRI implements GenIRIConstants {
         String split1;
     String split2;
     int split3;
+
+    String querysq;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PATH:
       jj_consume_token(PATH);
@@ -101,6 +104,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         concatLeftValue = expr(obj);
@@ -118,6 +122,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         concatRightValue = expr(obj);
@@ -140,6 +145,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         replace1 = expr(obj);
@@ -157,6 +163,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         replace2 = expr(obj);
@@ -174,6 +181,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         replace3 = expr(obj);
@@ -196,6 +204,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         split1 = expr(obj);
@@ -213,6 +222,7 @@ public class GenIRI implements GenIRIConstants {
       case PPATH:
       case CONCAT:
       case REPLACE:
+      case QUERY:
       case SPLIT:
       case PATH:
         split2 = expr(obj);
@@ -226,6 +236,29 @@ public class GenIRI implements GenIRIConstants {
       split3 = num();
       jj_consume_token(LPAR);
         {if (true) return split1.split(split2)[split3];}
+      break;
+    case QUERY:
+      jj_consume_token(QUERY);
+      jj_consume_token(RPAR);
+      graph = resGraph(obj);
+      jj_consume_token(COMMA);
+      querysq = str();
+      jj_consume_token(LPAR);
+        objs = (List) obj;
+        resIRI = (String)objs.get(1);
+        prefixMap = (PrefixMapping)objs.get(2);
+        querysq = "{ ?res skos:prefLabel ?title . BIND (STR(?title)  AS ?template) FILTER (lang(?title) = 'en')}";
+        querysq = querysq.replace("?res", "<" + resIRI + ">");
+        querysq = "SELECT ?template WHERE " + querysq;
+        Query gq = QueryFactory.create(Global.prefixes + querysq);
+        gq.setPrefixMapping(prefixMap);
+        gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+
+        rs = Global.exeQuery(gq.serialize(), graph);
+        while (rs.hasNext()){
+            String varResult = rs.next().get("?template").toString();
+            {if (true) return varResult;}
+        }
       break;
     default:
       jj_la1[8] = jj_gen;
@@ -285,7 +318,7 @@ public class GenIRI implements GenIRIConstants {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x40800,0x407c0,0x407c0,0x407c0,0x407c0,0x407c0,0x407c0,0x407c0,0x7c0,};
+      jj_la1_0 = new int[] {0x81000,0x80fc0,0x80fc0,0x80fc0,0x80fc0,0x80fc0,0x80fc0,0x80fc0,0xfc0,};
    }
 
   /** Constructor with InputStream. */
@@ -423,7 +456,7 @@ public class GenIRI implements GenIRIConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[19];
+    boolean[] la1tokens = new boolean[20];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -437,7 +470,7 @@ public class GenIRI implements GenIRIConstants {
         }
       }
     }
-    for (int i = 0; i < 19; i++) {
+    for (int i = 0; i < 20; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

@@ -16,7 +16,7 @@ data:languagesCM a :NullContainerMap;
 .
 
 data:languageCM a :ContainerMap;
-    :iriTemplate "$ppath(res.graph,2)$";
+    :iriTemplate "$query(res.graph,'test')$";
     :resourceMap data:languageRM;
 .
 

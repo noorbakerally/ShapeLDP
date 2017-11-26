@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.jena.query.ResultSet;
 import loader.configuration.Global;
+import org.apache.jena.query.QueryFactory;
 import java.util.Random;
 public class GenIRI
 {
@@ -39,6 +40,7 @@ TOKEN:
     <PPATH: "ppath" > |
     <CONCAT: "concat" > |
     <REPLACE: "replace" > |
+    <QUERY: "query" > |
     <SPLIT: "split" > |
     <PATH: "path"> |
     <RES: "res"> |
@@ -68,6 +70,8 @@ String expr(Object obj):
 	String split1;
     String split2;
     int split3;
+
+    String querysq;
 }
 {
     <PATH> <RPAR> ( leftValue = getResIRI(obj) | leftValue = str() ) <COMMA> rightValue = num() <LPAR>
@@ -122,6 +126,27 @@ String expr(Object obj):
     <SPLIT> <RPAR> (split1 = str() | split1 = expr(obj) ) <COMMA> (split2 = str() | split2 = expr(obj) ) <COMMA> split3 = num() <LPAR>
     {
         return split1.split(split2)[split3];
+    }
+    |
+    <QUERY> <RPAR> graph = resGraph(obj) <COMMA> querysq = str() <LPAR>
+    {
+
+        objs = (List) obj;
+        resIRI = (String)objs.get(1);
+        prefixMap = (PrefixMapping)objs.get(2);
+        querysq = "{ ?res skos:prefLabel ?title . BIND (STR(?title)  AS ?template) FILTER (lang(?title) = 'en')}";
+        querysq = querysq.replace("?res", "<" + resIRI + ">");
+        querysq = "SELECT ?template WHERE " + querysq;
+        Query gq = QueryFactory.create(Global.prefixes + querysq);
+        gq.setPrefixMapping(prefixMap);
+        gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+
+        rs = Global.exeQuery(gq.serialize(), graph);
+        while (rs.hasNext()){
+            String varResult = rs.next().get("?template").toString();
+            return varResult;
+        }
+
     }
 }
 Model resGraph(Object obj):

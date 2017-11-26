@@ -104,6 +104,13 @@ public class Test8 {
             iriParser.ReInit(System.in);
             Assert.assertTrue(iriParser.expr(null).equals("No"));
 
+            expr = "query(res.graph,'\\{  ?res skos:prefLabel ?template . \\}')";
+            bais = new ByteArrayInputStream(expr.getBytes());
+            System.setIn(bais);
+            iriParser.ReInit(System.in);
+            System.out.println(iriParser.expr(arrayList));
+
+
 
         } catch (ParseException e) {
             e.printStackTrace();
