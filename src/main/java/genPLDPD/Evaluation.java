@@ -114,37 +114,46 @@ public class Evaluation {
         //get the graph of the resources from the data source from which they were generated
         LOGGER.info("Retrieving related resources from DataSource for ResourceMap:"+resourceMap.getIRI());
 
-
-
-        for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()){
-            DataSource dataSource = datasourceEntry.getValue();
-            ResultSet rs = dataSource.executeResourceQuery(finalQuery);
-            while (rs.hasNext()){
-                QuerySolution qs = rs.next();
-
-                //get the current resource IRI
-                RDFNode resource = qs.get("?res");
-                if (resource != null){
-                    String resourceIRI = resource.toString();
-                    //create the resource in the list
-                    if (!resources.containsKey(resourceIRI)){
-                        resources.put(resourceIRI,new RDFResource(resourceIRI));
-                    }
-
-                    //get the resource graph
-                    if (Global.physical) {
-                        String graphQuery = resourceMap.getGraphQuery();
-                        graphQuery = graphQuery.replace("?res", "<" + resourceIRI + ">");
-                        Model tempModel = dataSource.executeGraphQuery(graphQuery);
-                        resources.get(resourceIRI).mergeModel(tempModel);
-                    }
-
-                } else {
-                    String rname = "null"+Math.random();
-                    resources.put(rname,new RDFResource(rname));
-                }
+        Model mergedModel = ModelFactory.createDefaultModel();
+        DataSource dataSource = new RDFFileDataSource("D");
+        if (resourceMap.getDataSources().entrySet().size() > 1){
+            for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()) {
+                mergedModel = mergedModel.union(datasourceEntry.getValue().getModel());
             }
+            dataSource.setModel(mergedModel);
+        } else {
+            for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()) {
+                dataSource = datasourceEntry.getValue();
+            }
+        }
 
+
+
+        ResultSet rs = dataSource.executeResourceQuery(finalQuery);
+        while (rs.hasNext()){
+            QuerySolution qs = rs.next();
+
+            //get the current resource IRI
+            RDFNode resource = qs.get("?res");
+            if (resource != null){
+                String resourceIRI = resource.toString();
+                //create the resource in the list
+                if (!resources.containsKey(resourceIRI)){
+                    resources.put(resourceIRI,new RDFResource(resourceIRI));
+                }
+
+                //get the resource graph
+                if (Global.physical) {
+                    String graphQuery = resourceMap.getGraphQuery();
+                    graphQuery = graphQuery.replace("?res", "<" + resourceIRI + ">");
+                    Model tempModel = dataSource.executeGraphQuery(graphQuery);
+                    resources.get(resourceIRI).mergeModel(tempModel);
+                }
+
+            } else {
+                String rname = "null"+Math.random();
+                resources.put(rname,new RDFResource(rname));
+            }
         }
         LOGGER.info("Related resources retrieved from DataSource for ResourceMap:"+resourceMap.getIRI());
 
@@ -219,7 +228,7 @@ public class Evaluation {
 
 
                     for (Map.Entry<String, DataSource> datasourceEntry : resourceMap.getDataSources().entrySet()) {
-                        DataSource dataSource = datasourceEntry.getValue();
+                        dataSource = datasourceEntry.getValue();
                         Resource ds = ResourceFactory.createResource(dataSource.getIRI());
                         Property dsProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "dataSource");
                         Global.virtualModel.add(ResourceFactory.createStatement(compiledRM,dsProperty,ds));
