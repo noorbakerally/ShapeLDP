@@ -247,7 +247,7 @@ public class GenIRI implements GenIRIConstants {
         objs = (List) obj;
         resIRI = (String)objs.get(1);
         prefixMap = (PrefixMapping)objs.get(2);
-        querysq = "{ ?res skos:prefLabel ?title . BIND (STR(?title)  AS ?template) FILTER (lang(?title) = 'en')}";
+        //querysq = "{ ?res skos:prefLabel ?title . BIND (STR(?title)  AS ?template) FILTER (lang(?title) = 'en')}";
         querysq = querysq.replace("?res", "<" + resIRI + ">");
         querysq = "SELECT ?template WHERE " + querysq;
         Query gq = QueryFactory.create(Global.prefixes + querysq);

@@ -163,7 +163,25 @@ public class Evaluation {
             String currentResourceIRI = rdfResourceEntry.getKey();
             RDFResource currentResource = rdfResourceEntry.getValue();
 
-            String newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResource,parents);
+            String newIRI = null;
+            if (parentMap.getIRIQueryTemplate() == null){
+                newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResource,parents);
+            } else {
+                String querysq = parentMap.getIRIQueryTemplate();
+                querysq = querysq.replace("?res", "<" + currentResourceIRI + ">");
+                querysq = "SELECT DISTINCT ?template WHERE " + querysq;
+                Query gq = QueryFactory.create(Global.prefixes + querysq);
+                //gq.setPrefixMapping(Global.dupPrefixMap);
+                //gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+
+                rs = Global.exeQuery(gq.serialize(), currentResource.getModel());
+                while (rs.hasNext()){
+                    String varResult = rs.next().get("?template").toString();
+                    newIRI = varResult;
+                }
+            }
+
+
             if (container.getIRI().length() != 0){
                 newIRI = container.getIRI() + "/"+newIRI;
             }

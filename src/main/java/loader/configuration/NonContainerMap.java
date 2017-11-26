@@ -13,6 +13,7 @@ public class NonContainerMap implements HasResourceMap{
     String iriTemplate;
     ContainerMap parentContainerMap;
     Map<String,ResourceMap> resourceMaps = new HashMap<String, ResourceMap>();
+    String iriQueryTemplate;
 
     public NonContainerMap(String IRI) {
         this.IRI = IRI;
@@ -41,6 +42,11 @@ public class NonContainerMap implements HasResourceMap{
         return iriTemplate;
     }
 
+    @Override
+    public String getIRIQueryTemplate() {
+        return iriQueryTemplate;
+    }
+
     public String toString(int level) {
         String str = "";
         String tab= StringUtils.repeat("\t", level);
@@ -53,29 +59,32 @@ public class NonContainerMap implements HasResourceMap{
         }
         return str;
     }
-
-
     public Map<String, ResourceMap> getResourceMaps() {
         return resourceMaps;
     }
-
     public String getIriTemplate() {
         return iriTemplate;
     }
-
     public void setIriTemplate(String iriTemplate) {
         this.iriTemplate = iriTemplate;
     }
-
     public void setResourceMaps(Map<String, ResourceMap> resourceMaps) {
         this.resourceMaps = resourceMaps;
     }
-
     public ContainerMap getParentContainerMap() {
         return parentContainerMap;
     }
-
     public void setParentContainerMap(ContainerMap parentContainerMap) {
         this.parentContainerMap = parentContainerMap;
     }
+
+    public String getIriQueryTemplate() {
+        return iriQueryTemplate;
+    }
+
+    public void setIriQueryTemplate(String iriQueryTemplate) {
+        this.iriQueryTemplate = iriQueryTemplate;
+    }
+
+
 }

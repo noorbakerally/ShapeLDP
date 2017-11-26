@@ -9,5 +9,6 @@ public interface HasResourceMap {
     public ResourceMap getResourceMap(String IRI);
     public Global.LDPRType getType();
     public String getIRITemplate();
+    public String getIRIQueryTemplate();
 }
 

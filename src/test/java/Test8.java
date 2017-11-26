@@ -58,6 +58,7 @@ public class Test8 {
             PrefixMapping prefixMap = PrefixMapping.Factory.create();
             prefixMap.setNsPrefix("dcat","http://www.w3.org/ns/dcat#");
             prefixMap.setNsPrefix("vcard","http://www.w3.org/2001/vcard-rdf/3.0#");
+            prefixMap.setNsPrefix("skos","http://www.w3.org/2001/vcard-rdf/1.0#");
             arrayList.add(prefixMap);
             Assert.assertTrue(iriParser.expr(arrayList).equals("Noorani"));
 
@@ -104,7 +105,8 @@ public class Test8 {
             iriParser.ReInit(System.in);
             Assert.assertTrue(iriParser.expr(null).equals("No"));
 
-            expr = "query(res.graph,'\\{  ?res skos:prefLabel ?template . \\}')";
+            expr = "query(res.graph,'\\{ ?res skos:prefLabel ?title . BIND (STR(?title)  AS ?template) FILTER (lang(?title) = \\'en\\')\\}')";
+
             bais = new ByteArrayInputStream(expr.getBytes());
             System.setIn(bais);
             iriParser.ReInit(System.in);

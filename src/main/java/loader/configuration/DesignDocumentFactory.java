@@ -164,6 +164,10 @@ public class DesignDocumentFactory {
             if (Global.getVTerm("iriTemplate").equals(p)) {
                 containerMaps.get(containerMapIRI).setIriTemplate(o);
             }
+            if (Global.getVTerm("iriQueryTemplate").equals(p)) {
+                containerMaps.get(containerMapIRI).setIriQueryTemplate(o);
+            }
+
         }
     }
 
@@ -183,6 +187,10 @@ public class DesignDocumentFactory {
 
             if (Global.getVTerm("iriTemplate").equals(p)) {
                 nonContainerMaps.get(nonContainerMapIRI).setIriTemplate(o);
+            }
+
+            if (Global.getVTerm("iriQueryTemplate").equals(p)) {
+                nonContainerMaps.get(nonContainerMapIRI).setIriQueryTemplate(o);
             }
         }
     }

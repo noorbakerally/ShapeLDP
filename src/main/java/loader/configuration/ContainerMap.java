@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class ContainerMap implements HasResourceMap {
     String iriTemplate;
+    String iriQueryTemplate;
     String IRI;
     Map<String,ContainerMap> containerMaps = new HashMap<String, ContainerMap>();
     Map<String,NonContainerMap> nonContainerMaps = new HashMap<String, NonContainerMap>();
@@ -119,5 +120,18 @@ public class ContainerMap implements HasResourceMap {
 
     public void setNonContainerMaps(Map<String, NonContainerMap> nonContainerMaps) {
         this.nonContainerMaps = nonContainerMaps;
+    }
+
+    public String getIriQueryTemplate() {
+        return iriQueryTemplate;
+    }
+
+    @Override
+    public String getIRIQueryTemplate() {
+        return iriQueryTemplate;
+    }
+
+    public void setIriQueryTemplate(String iriQueryTemplate) {
+        this.iriQueryTemplate = iriQueryTemplate;
     }
 }
