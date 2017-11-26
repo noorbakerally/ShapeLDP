@@ -41,7 +41,7 @@ public class GenIRI implements GenIRIConstants {
       jj_consume_token(RPAR);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case RES:
-        leftValue = res(obj);
+        leftValue = getResIRI(obj);
         break;
       case STRING_LITERAL1:
         leftValue = str();
@@ -244,11 +244,12 @@ public class GenIRI implements GenIRIConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public String res(Object obj) throws ParseException {
+  static final public String getResIRI(Object obj) throws ParseException {
     Token t;
     t = jj_consume_token(RES);
-        String resStr = (String)obj;
-        {if (true) return resStr;}
+        List <Object> objs = (List) obj;
+        String resIRI = (String)objs.get(1);
+        {if (true) return resIRI;}
     throw new Error("Missing return statement in function");
   }
 

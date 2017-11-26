@@ -16,6 +16,7 @@ public class Global {
     public static int resourceMapsExecuted;
     public enum ContainerType {Basic,Direct,Indirect}
     public static PrefixMapping prefixMap;
+    public static PrefixMapping dupPrefixMap;
     public static String prefixes = "";
     public static String vocabularyPrefix = "http://opensensingcity.emse.fr/LDPDesignVocabulary/";
     public static Model virtualModel = ModelFactory.createDefaultModel();

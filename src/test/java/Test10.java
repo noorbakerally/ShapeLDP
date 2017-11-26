@@ -15,9 +15,9 @@ import java.io.StringWriter;
 /**
  * Created by bakerally on 11/23/17.
  */
-public class Test9 {
+public class Test10 {
     @Test
-    public void virtualGraph() {
+    public void generateLanguagesLDPDataset() {
         //global params
         Global.physical = true;
         Evaluation.base = "";

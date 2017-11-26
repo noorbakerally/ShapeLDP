@@ -102,7 +102,7 @@ public class Evaluation {
 
         String resourceQuery = resourceMap.getResourceQuery();
         resourceQuery = Utilities.processRawQuery(resourceQuery,parents);
-        String finalQuery = "Select * WHERE "+resourceQuery;
+        String finalQuery = "Select DISTINCT ?res WHERE "+resourceQuery;
 
         //a list to hold all resources generated from all datasources
         //and their model
@@ -113,6 +113,9 @@ public class Evaluation {
         //create a map for the resources with their model
         //get the graph of the resources from the data source from which they were generated
         LOGGER.info("Retrieving related resources from DataSource for ResourceMap:"+resourceMap.getIRI());
+
+
+
         for (Map.Entry<String,DataSource> datasourceEntry:resourceMap.getDataSources().entrySet()){
             DataSource dataSource = datasourceEntry.getValue();
             ResultSet rs = dataSource.executeResourceQuery(finalQuery);
@@ -151,7 +154,7 @@ public class Evaluation {
             String currentResourceIRI = rdfResourceEntry.getKey();
             RDFResource currentResource = rdfResourceEntry.getValue();
 
-            String newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResourceIRI,parents);
+            String newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResource,parents);
             if (container.getIRI().length() != 0){
                 newIRI = container.getIRI() + "/"+newIRI;
             }

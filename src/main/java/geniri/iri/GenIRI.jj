@@ -70,7 +70,7 @@ String expr(Object obj):
     int split3;
 }
 {
-    <PATH> <RPAR> ( leftValue = res(obj) | leftValue = str() ) <COMMA> rightValue = num() <LPAR>
+    <PATH> <RPAR> ( leftValue = getResIRI(obj) | leftValue = str() ) <COMMA> rightValue = num() <LPAR>
 	{
 	    URI uri = URI.create(leftValue);
         String[] pathParts = uri.getRawPath().split("/");
@@ -136,14 +136,15 @@ Model resGraph(Object obj):
     }
 }
 
-String res(Object obj):
+String getResIRI(Object obj):
 {
     Token t;
 }
 {
     t = <RES> {
-        String resStr = (String)obj;
-        return resStr;
+        List <Object> objs = (List) obj;
+        String resIRI = (String)objs.get(1);
+        return resIRI;
     }
 }
 

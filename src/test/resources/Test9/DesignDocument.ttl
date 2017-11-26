@@ -66,6 +66,6 @@ data:distributionRM a :ResourceMap;
     :dataSource data:DataSource1;
 .
 
-data:DataSource1 a :SPARQLDataSource;
-    :location "http://opensensingcity.emse.fr/sparql/bistro";
+data:DataSource1 a :RDFFileDataSource;
+    :location "https://data.issy.com/api/v2/catalog/exports/ttl";
 .

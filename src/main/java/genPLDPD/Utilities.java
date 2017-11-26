@@ -2,6 +2,8 @@ package genPLDPD;
 
 import geniri.iri.GenIRI;
 import geniri.iri.ParseException;
+import ldp.RDFResource;
+import loader.configuration.Global;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
@@ -11,6 +13,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,8 +82,9 @@ public class Utilities {
         return resourceQuery;
     }
 
-    public static String processIRITemplate(String template,String resource,List <String> parents){
+    public static String processIRITemplate(String template, RDFResource resource, List <String> parents){
         int iloc = 0;
+
         if (template.contains("$")){
 
             while (iloc < template.length()){
@@ -99,7 +103,11 @@ public class Utilities {
 
                     String processedExpr = null;
                     try {
-                        processedExpr = iriParser.expr(resource);
+                        List <Object> arrayList = new ArrayList<Object>();
+                        arrayList.add(resource.getModel());
+                        arrayList.add(resource.getIRI());
+                        arrayList.add(Global.dupPrefixMap);
+                        processedExpr = iriParser.expr(arrayList);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -107,7 +115,7 @@ public class Utilities {
                             template.substring(iloc,floc) +
                             processedExpr+template.substring(lloc+1,template.length());
                 } else {
-                    iloc = resource.length() + 1;
+                    iloc = resource.getIRI().length() + 1;
                 }
             }
         }

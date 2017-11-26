@@ -115,10 +115,12 @@ public class RDFFileDataSource extends DataSource {
     }
 
     public ResultSet executeResourceQuery(String query) {
+        if (model == null) load();
         return Global.exeQuery(query,model);
     }
 
     public Model executeGraphQuery(String query) {
+        if (model == null) load();
         return Global.exeGraphQuery(query,model);
     }
 

@@ -1,0 +1,42 @@
+@prefix : <http://opensensingcity.emse.fr/LDPDesignVocabulary/> .
+@prefix data: <http://opensensingcity.emse.fr/LDPDesign/data/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+
+data:catalogCM a :ContainerMap;
+    :iriTemplate "$path(res,2)$";
+    :resourceMap data:catalogRM;
+    :containerMap data:languagesCM;
+.
+
+data:languagesCM a :NullContainerMap;
+    :iriTemplate "languages";
+    :containerMap data:languageCM;
+.
+
+data:languageCM a :ContainerMap;
+    :iriTemplate "$path(res,2)$";
+    :resourceMap data:languageRM;
+.
+
+data:catalogRM a :ResourceMap;
+    :resourceQuery "{ ?res a dcat:Catalog .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:dataset)) }";
+    :dataSource data:DataSource1;
+.
+
+data:languageRM a :ResourceMap;
+    :resourceQuery "{ ?x dct:language ?res .}";
+    :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
+    :dataSource data:DataSource1;
+    :dataSource data:DataSource2;
+ .
+
+data:DataSource1 a :RDFFileDataSource;
+    :location "https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl";
+.
+
+data:DataSource2 a :RDFFileDataSource;
+    :location "file:///home/noor/Documents/repositories/github/LanguageRDF/graph.ttl";
+.

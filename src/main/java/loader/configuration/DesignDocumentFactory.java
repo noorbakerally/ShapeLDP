@@ -46,6 +46,14 @@ public class DesignDocumentFactory {
         //getting the defined prefixes from the design document
         Global.prefixMap = PrefixMapping.Factory.create();
         Global.prefixMap.setNsPrefixes(model.getNsPrefixMap());
+
+        //dupPrefixMap is created only as a temporary solution
+        //because prefixMap is being emptied somewhere and
+        //im lazy to look where this is happening
+        //so i'm creating a duplicate prefix map
+        Global.dupPrefixMap = PrefixMapping.Factory.create();
+        Global.dupPrefixMap.setNsPrefixes(model.getNsPrefixMap());
+
         for (Map.Entry <String,String> prefix: Global.prefixMap.getNsPrefixMap().entrySet()){
             String key = prefix.getKey();
             key = key + ":";
