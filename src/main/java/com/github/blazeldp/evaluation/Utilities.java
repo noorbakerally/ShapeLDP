@@ -59,10 +59,10 @@ public class Utilities {
 
     public static String processRawQuery(String resourceQuery,List<String> parents){
         int iloc = 0;
-        if (resourceQuery.contains("$parent")){
+        if (resourceQuery.contains("?{parent")){
             while (iloc < resourceQuery.length()){
-                int floc = resourceQuery.indexOf("$",0);
-                int lloc = resourceQuery.indexOf("$",floc+1);
+                int floc = resourceQuery.indexOf("?{",0);
+                int lloc = resourceQuery.indexOf("}",floc+1);
                 if (floc > 0){
                     String expr = resourceQuery.substring(floc+1,lloc);
                     expr = expr.replace("\\.","");

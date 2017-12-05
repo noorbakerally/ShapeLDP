@@ -22,7 +22,7 @@ data:catalogRM a :ResourceMap;
 .
 
 data:datasetRM a :ResourceMap;
-    :resourceQuery "{ $parent$ dcat:dataset ?res .}";
+    :resourceQuery "{ ?{parent} dcat:dataset ?res .}";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:distribution)) }";
     :dataSource data:DataSource1;
 .

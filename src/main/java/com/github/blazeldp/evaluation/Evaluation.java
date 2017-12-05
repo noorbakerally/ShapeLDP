@@ -90,7 +90,8 @@ public class Evaluation {
         return evalResult;
     }
 
-    public static EvalResult evalRM(ResourceMap resourceMap, HasResourceMap parentMap, Container container, List <String> parents){
+    public static EvalResult evalRM(ResourceMap resourceMap, HasResourceMap parentMap, Container container,
+                                    List <String> parents){
         LOGGER.info("Evaluation of ResourceMap:"+resourceMap.getIRI()+" for Map:"+parentMap.getIRI());
 
         //increase the number of resource maps executed
@@ -126,6 +127,9 @@ public class Evaluation {
             }
         }
 
+        if (resourceMap.getIRI().equals("http://opensensingcity.emse.fr/LDPDesign/data/datasetRM")){
+            System.out.println("test");
+        }
 
 
         ResultSet rs = dataSource.executeResourceQuery(finalQuery);

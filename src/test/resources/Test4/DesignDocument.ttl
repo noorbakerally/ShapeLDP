@@ -23,7 +23,7 @@ data:distributionNM a :NonContainerMap;
 .
 
 data:distributionRM a :ResourceMap;
-    :resourceQuery "{ $parent$ dcat:distribution ?res .} LIMIT 1";
+    :resourceQuery "{ ?{parent} dcat:distribution ?res .} LIMIT 1";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
     :dataSource data:DataSource1;
 .
@@ -35,7 +35,7 @@ data:catalogRM a :ResourceMap;
 .
 
 data:datasetRM a :ResourceMap;
-    :resourceQuery "{ $parent$ dcat:dataset ?res .} LIMIT 1";
+    :resourceQuery "{ ?{parent} dcat:dataset ?res .} LIMIT 1";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . FILTER (?p not in (dcat:distribution)) }";
     :dataSource data:DataSource1;
 .
