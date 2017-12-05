@@ -1,0 +1,1 @@
+java -jar target/DDLoader-1.0-SNAPSHOT.jar -d /home/bakerally/Downloads/Test16.ttl -o /home/bakerally/Downloads/out.ttl -is https://opendata.paris.fr/api/v2/catalog/exports/ttl

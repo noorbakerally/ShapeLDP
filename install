@@ -1,0 +1,1 @@
+mvn -T 10 clean install -DskipTests
