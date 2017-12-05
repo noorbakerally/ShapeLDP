@@ -1,8 +1,7 @@
-import genPLDPD.Evaluation;
-import loader.configuration.DesignDocument;
-import loader.configuration.DesignDocumentFactory;
-import loader.configuration.Global;
-import loader.configuration.RDFFileDataSource;
+import com.github.blazeldp.evaluation.Evaluation;
+import com.github.blazeldp.ddcomponents.DesignDocument;
+import com.github.blazeldp.ddcomponents.DesignDocumentFactory;
+import com.github.blazeldp.evaluation.Global;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.riot.Lang;

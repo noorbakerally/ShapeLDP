@@ -2,8 +2,10 @@
  * Created by bakerally on 11/21/17.
  */
 
-import genPLDPD.Evaluation;
-import loader.configuration.*;
+import com.github.blazeldp.ddcomponents.DesignDocument;
+import com.github.blazeldp.ddcomponents.DesignDocumentFactory;
+import com.github.blazeldp.evaluation.Evaluation;
+import com.github.blazeldp.evaluation.Global;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.riot.Lang;

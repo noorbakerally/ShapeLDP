@@ -1,5 +1,8 @@
-import genPLDPD.Evaluation;
-import loader.configuration.*;
+import com.github.blazeldp.ddcomponents.DesignDocument;
+import com.github.blazeldp.ddcomponents.DesignDocumentFactory;
+import com.github.blazeldp.ddcomponents.RDFFileDataSource;
+import com.github.blazeldp.evaluation.Evaluation;
+import com.github.blazeldp.evaluation.Global;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.riot.Lang;
@@ -11,11 +14,13 @@ import org.junit.Test;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.logging.Logger;
 
 /**
  * Created by bakerally on 11/21/17.
  */
 public class Test3 {
+    private static final Logger LOGGER = Logger.getLogger( Test3.class.getName() );
 
     @Test
     public void usingLiftingRule() {
@@ -27,16 +32,22 @@ public class Test3 {
 
         //set the data source
         RDFFileDataSource mainDataSource = new RDFFileDataSource("DefaultDataSource");
-        mainDataSource.setLocation(" http://country.io/capital.json");
-        mainDataSource.setLiftingRuleLocation("https://raw.githubusercontent.com/thesmartenergy/sparql-generate/master/sparql-generate-jena/src/test/resources/capital/query.rqg");
+
+        File capitalJSON = TestUtilities.getTestResource(getClass().getSimpleName(),"capital.json");
+        mainDataSource.setLocation("file://"+capitalJSON.getAbsolutePath());
+
+        File queryRQG = TestUtilities.getTestResource(getClass().getSimpleName(),"query.rqg");
+        mainDataSource.setLiftingRuleLocation("file://"+queryRQG.getAbsolutePath());
 
 
         //load the design document
-        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
-        DesignDocument dd = DesignDocumentFactory.createDDFromFile(designDocument.getAbsolutePath(), mainDataSource);
+        File designDocument3 = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
+        LOGGER.info("Loading design document from:"+designDocument3.getAbsolutePath());
+        DesignDocument dd3 = DesignDocumentFactory.createDDFromFile(designDocument3.getAbsolutePath(), mainDataSource);
+
 
         //evaluate the design document
-        Dataset resultDataset = Evaluation.evalDD(dd,"");
+        Dataset resultDataset = Evaluation.evalDD(dd3,"");
 
         //create the actual dataset with an absolute IRI using the resultDataset
         StringWriter writer = new StringWriter();

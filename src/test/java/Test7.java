@@ -1,46 +1,104 @@
-import genPLDPD.Evaluation;
-import loader.configuration.DesignDocument;
-import loader.configuration.DesignDocumentFactory;
-import loader.configuration.Global;
-import org.apache.jena.query.Dataset;
-import org.apache.jena.query.DatasetFactory;
+import com.github.blazeldp.templateIRI.GenIRI;
+import com.github.blazeldp.templateIRI.ParseException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.sparql.util.IsoMatcher;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.VCARD;
 import org.junit.Assert;
 import org.junit.Test;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 /**
- * Created by bakerally on 11/23/17.
+ * Created by noor on 24/11/17.
  */
 public class Test7 {
     @Test
-    public void virtualGraph() {
-        //global params
-        Global.physical = true;
-        Evaluation.base = "";
+    public void testExpression () {
+        GenIRI  iriParser;
 
-        //load the design document
-        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
-        DesignDocument dd = DesignDocumentFactory.createDDFromFile(designDocument.getAbsolutePath(), null);
+        /***
+         * Test Expression 1
+         *
+         */
+        String expr = "ppath(res.graph,'vcard:N/vcard:Given')";
+        ByteArrayInputStream bais = new ByteArrayInputStream(expr.getBytes());
+        System.setIn(bais);
 
-        //evaluate the design document
-        Dataset resultDataset = Evaluation.evalDD(dd,"");
-
-        //create the actual dataset with an absolute IRI using the resultDataset
-        StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, resultDataset.asDatasetGraph(), Lang.TRIG) ;
-        String data = writer.toString();
-        System.out.println("=================Actual Dataset=================");
-        System.out.println(data);
+        iriParser = new GenIRI(System.in);
 
 
+
+        Model model = ModelFactory.createDefaultModel();
+
+        String processedExpr = null;
+        try {
+
+
+            Resource johnSmith
+                    = model.createResource("http://example.com/p1")
+                    .addProperty(VCARD.FN, "Noorani Bakerally")
+                    .addProperty(VCARD.N,
+                            model.createResource()
+                                    .addProperty(VCARD.Given, "Noorani")
+                                    .addProperty(VCARD.Family, "Bakerally"));
+
+            //add the model
+            List <Object> arrayList = new ArrayList<Object>();
+            arrayList.add(model);
+
+            //add the resIRI
+            String resIRI = "http://example.com/p1";
+            arrayList.add(resIRI);
+
+            //add the prefix map
+            PrefixMapping prefixMap = PrefixMapping.Factory.create();
+            prefixMap.setNsPrefix("dcat","http://www.w3.org/ns/dcat#");
+            prefixMap.setNsPrefix("vcard","http://www.w3.org/2001/vcard-rdf/3.0#");
+            prefixMap.setNsPrefix("skos","http://www.w3.org/2001/vcard-rdf/1.0#");
+            arrayList.add(prefixMap);
+            Assert.assertTrue(iriParser.expr(arrayList).equals("Noorani"));
+
+            //model.write(System.out, "Turtle");
+
+            /***
+             * Test Expression 2
+             *
+             */
+            expr = "concat('a','b')";
+            bais = new ByteArrayInputStream(expr.getBytes());
+            System.setIn(bais);
+            iriParser.ReInit(System.in);
+            System.out.println( );
+            Assert.assertTrue(iriParser.expr(null).equals("ab"));
+
+            /***
+             * Test Expression 3
+             *
+             */
+            expr = "concat(ppath(res.graph,'vcard:N/vcard:Given'),'b')";
+            bais = new ByteArrayInputStream(expr.getBytes());
+            System.setIn(bais);
+            iriParser.ReInit(System.in);
+            Assert.assertTrue(iriParser.expr(arrayList).equals("Nooranib"));
+
+            /***
+             * Test Expression 4
+             *
+             */
+            expr = "replace('Nourani','u','o')";
+            bais = new ByteArrayInputStream(expr.getBytes());
+            System.setIn(bais);
+            iriParser.ReInit(System.in);
+            Assert.assertTrue(iriParser.expr(arrayList).equals("Noorani"));
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 }
