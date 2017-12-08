@@ -1,5 +1,5 @@
-import com.github.blazeldp.templateIRI.GenIRI;
-import com.github.blazeldp.templateIRI.ParseException;
+import com.github.shapeldp.templateIRI.GenIRI;
+import com.github.shapeldp.templateIRI.ParseException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;

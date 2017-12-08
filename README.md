@@ -1,6 +1,6 @@
-# BlazeLDP
+# ShapeLDP
 
-BlazeLDP generates <a href="http://opensensingcity.emse.fr/ldpdl/ldpdl.html#ldp-dataset">LDP dataset</a> from data sources using a design document as input. The design document is written in <a href="opensensingcity.emse.fr/ldpdl/ldpdl.html">LDP-DL</a>. Use `mvn clean install` to build the project. There is a command line interface having the following options:
+ShapeLDP generates <a href="http://opensensingcity.emse.fr/ldpdl/ldpdl.html#ldp-dataset">LDP dataset</a> from data sources using a design document as input. The design document is written in <a href="opensensingcity.emse.fr/ldpdl/ldpdl.html">LDP-DL</a>. Use `mvn clean install` to build the project. There is a command line interface having the following options:
 
 ```
  -d,--designDocument <arg>    Path to design document

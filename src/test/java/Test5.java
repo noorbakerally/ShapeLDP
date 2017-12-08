@@ -1,7 +1,7 @@
-import com.github.blazeldp.evaluation.Evaluation;
-import com.github.blazeldp.ddcomponents.DesignDocument;
-import com.github.blazeldp.ddcomponents.DesignDocumentFactory;
-import com.github.blazeldp.evaluation.Global;
+import com.github.shapeldp.evaluation.Evaluation;
+import com.github.shapeldp.ddcomponents.DesignDocument;
+import com.github.shapeldp.ddcomponents.DesignDocumentFactory;
+import com.github.shapeldp.evaluation.Global;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.riot.Lang;

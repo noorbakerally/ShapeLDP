@@ -1,0 +1,196 @@
+options
+{
+}
+PARSER_BEGIN(GenIRI)
+package com.github.shapeldp.templateIRI;
+import java.net.URI;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.core.TriplePath;
+import org.apache.jena.sparql.path.Path;
+import org.apache.jena.sparql.path.PathParser;
+import org.apache.jena.sparql.syntax.ElementPathBlock;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.jena.query.ResultSet;
+import com.github.shapeldp.evaluation.Global;
+import org.apache.jena.query.QueryFactory;
+import java.util.Random;
+public class GenIRI
+{
+
+
+}
+PARSER_END(GenIRI)
+SKIP :
+{
+    " "
+|   "\r"
+|   "\t"
+|   "\n"
+}
+TOKEN:
+{
+    < NUMBER: (["0"-"9"])+  > |
+    <PPATH: "ppath" > |
+    <CONCAT: "concat" > |
+    <REPLACE: "replace" > |
+    <QUERY: "query" > |
+    <SPLIT: "split" > |
+    <PATH: "path"> |
+    <RES: "res"> |
+    <RESG: "res.graph"> |
+    <RPAR: "("> |
+    <LPAR: ")"> |
+    <QUOTE: "'"> |
+    <COMMA: ","> |
+    <ECHAR: "\\" ( "t"|"b"|"n"|"r"|"f"|"\\"|"\""|"'"|"{"|"}") > |
+    <STRING_LITERAL1: "'" ( (~["'","\\","\n","\r","{"]) | <ECHAR> )* "'" >
+}
+
+String expr(Object obj):
+{
+	String leftValue ;
+    int rightValue ;
+	String ppath;
+	Model graph;
+
+	String concatLeftValue;
+	String concatRightValue;
+
+	String replace1;
+	String replace2;
+	String replace3;
+
+	String split1;
+    String split2;
+    int split3;
+
+    String querysq;
+}
+{
+    <PATH> <RPAR> ( leftValue = getResIRI(obj) | leftValue = str() ) <COMMA> rightValue = num() <LPAR>
+	{
+	    URI uri = URI.create(leftValue);
+        String[] pathParts = uri.getRawPath().split("/");
+        String result = pathParts[rightValue+1];
+	    return result;
+
+	}
+	|
+    <PPATH> <RPAR> graph = resGraph(obj) <COMMA> ppath = str() <LPAR>
+	{
+
+	    List <Object> objs = (List) obj;
+	    String resIRI = (String)objs.get(1);
+        PrefixMapping prefixMap = (PrefixMapping)objs.get(2);
+        Path p = PathParser.parse(ppath, prefixMap);
+        Query query = new Query();
+        query.setQuerySelectType();
+        Node oResource = NodeFactory.createURI(resIRI);
+        Node res = NodeFactory.createVariable("result");
+        TriplePath triplePattern = new TriplePath(oResource,p,res);
+        ElementPathBlock tp = new ElementPathBlock();
+        tp.addTriplePath(triplePattern);
+        query.setQueryPattern(tp);
+        query.setQueryResultStar(true);
+
+        ResultSet rs = Global.exeQuery(query.serialize(), graph);
+        while (rs.hasNext()){
+            String varResult = rs.next().get("?result").toString();
+            return varResult;
+        }
+
+        //Random rand = new Random();
+        //return String.valueOf(rand.nextLong());
+
+        return null;
+	}
+	|
+	<CONCAT> <RPAR> (concatLeftValue = str() | concatLeftValue = expr(obj) ) <COMMA> (concatRightValue = str() | concatRightValue = expr(obj) ) <LPAR>
+    {
+        return concatLeftValue+concatRightValue;
+    }
+    |
+    <REPLACE> <RPAR> (replace1 = str() | replace1 = expr(obj) ) <COMMA> (replace2 = str() | replace2 = expr(obj) ) <COMMA> (replace3 = str() | replace3 = expr(obj) ) <LPAR>
+    {
+        return replace1.replace(replace2,replace3);
+    }
+
+    |
+    <SPLIT> <RPAR> (split1 = str() | split1 = expr(obj) ) <COMMA> (split2 = str() | split2 = expr(obj) ) <COMMA> split3 = num() <LPAR>
+    {
+        return split1.split(split2)[split3];
+    }
+    |
+    <QUERY> <RPAR> graph = resGraph(obj) <COMMA> querysq = str() <LPAR>
+    {
+
+        objs = (List) obj;
+        resIRI = (String)objs.get(1);
+        prefixMap = (PrefixMapping)objs.get(2);
+        //querysq = "{ ?res skos:prefLabel ?title . BIND (STR(?title)  AS ?template) FILTER (lang(?title) = 'en')}";
+        querysq = querysq.replace("?res", "<" + resIRI + ">");
+        querysq = "SELECT ?template WHERE " + querysq;
+        Query gq = QueryFactory.create(Global.prefixes + querysq);
+        gq.setPrefixMapping(prefixMap);
+        gq.getPrologue().getPrefixMapping().clearNsPrefixMap();
+
+        rs = Global.exeQuery(gq.serialize(), graph);
+        while (rs.hasNext()){
+            String varResult = rs.next().get("?template").toString();
+            return varResult;
+        }
+
+    }
+}
+Model resGraph(Object obj):
+{
+    Token t;
+}
+{
+    t = <RESG> {
+        List <Object> objs = (List) obj;
+        Model objModel = (Model)objs.get(0);
+        return objModel;
+    }
+}
+
+String getResIRI(Object obj):
+{
+    Token t;
+}
+{
+    t = <RES> {
+        List <Object> objs = (List) obj;
+        String resIRI = (String)objs.get(1);
+        return resIRI;
+    }
+}
+
+String str():
+{
+	Token t;
+}
+{
+
+    t = <STRING_LITERAL1> {
+        String resStr = t.toString();
+        resStr = resStr.substring(1,resStr.length()-1);
+        return resStr;
+    }
+}
+
+int num():
+{
+	Token t;
+}
+{
+    t = <NUMBER> { return Integer.parseInt(t.toString()); }
+}
+
