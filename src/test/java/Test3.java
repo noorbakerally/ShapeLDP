@@ -41,7 +41,7 @@ public class Test3 {
 
 
         //load the design document
-        File designDocument3 = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
+        File designDocument3 = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocumentBBC.ttl");
         LOGGER.info("Loading design document from:"+designDocument3.getAbsolutePath());
         DesignDocument dd3 = DesignDocumentFactory.createDDFromFile(designDocument3.getAbsolutePath(), mainDataSource);
 

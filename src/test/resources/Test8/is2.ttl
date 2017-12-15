@@ -4,13 +4,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 
-on:LivingThings rdfs:subClassOf owl:Thing .
 on:Animal rdfs:subClassOf on:LivingThings .
 on:Vertebrates rdfs:subClassOf on:Animal .
 on:HumanBeing rdfs:subClassOf on:Vertebrates .
-on:LivingThings rdfs:subClassOf on:HumanBeing .
 
-owl:Thing a owl:Class .
 on:Vertebrates a owl:Class .
 on:LivingThings a owl:Class .
 on:Animal a owl:Class .

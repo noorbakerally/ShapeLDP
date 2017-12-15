@@ -24,10 +24,12 @@ public class Test8 {
         Evaluation.base = "";
 
         //set the data source
-        File is = TestUtilities.getTestResource(getClass().getSimpleName(),"is1.ttl");
+        File is = TestUtilities.getTestResource(getClass().getSimpleName(),"is2.ttl");
 
         DataSource mainDataSource = new RDFFileDataSource("DefaultDataSource");
-        mainDataSource.setLocation("https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl");
+        //mainDataSource.setLocation("https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl");
+        //mainDataSource.setLocation(is.getAbsolutePath());
+        mainDataSource.setLocation("/home/noor/Documents/repositories/github/bbc-wildlife/all.nt");
 
         //load the design document
         File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");

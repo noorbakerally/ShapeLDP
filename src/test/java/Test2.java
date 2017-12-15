@@ -35,7 +35,7 @@ public class Test2 {
         mainDataSource.setLocation("http://opensensingcity.emse.fr/sparql/bistro");
 
         //load the design document
-        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
+        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocumentBBC.ttl");
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(designDocument.getAbsolutePath(), mainDataSource);
 
         //evaluate the design document

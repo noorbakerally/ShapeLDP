@@ -31,7 +31,7 @@ public class Test1  {
         mainDataSource.setLocation("https://bistrotdepays.opendatasoft.com/api/v2/catalog/exports/ttl");
 
         //load the design document
-        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
+        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocumentBBC.ttl");
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(designDocument.getAbsolutePath(), mainDataSource);
 
         //evaluate the design document

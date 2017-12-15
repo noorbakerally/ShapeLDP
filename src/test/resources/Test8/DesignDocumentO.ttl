@@ -8,15 +8,25 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 
 data:classesCM a :NullContainerMap;
-    :iriTemplate "resources";
+    :iriTemplate "classes";
     :containerMap data:classCM;
 .
 
 data:classCM a :ContainerMap;
     :iriQueryTemplate "{BIND(str(?res) as ?nres) BIND(if(contains(?nres, '#'),true,false) as ?hash) BIND(SUBSTR(?nres,STRLEN(?nres),1) as ?lstr) BIND(if(?lstr='/',SUBSTR(?nres,0,STRLEN(?nres)),?nres) as ?fres) BIND(if(?hash,REPLACE(?fres,'.*#',''),REPLACE(?fres,'.*/','')) as ?template)}";
     :resourceMap data:classRM;
-    :nonContainerMap data:instanceCM;
+    :containerMap data:instancesCM;
+    :containerMap data:subclassesCM;
+.
+
+data:subclassesCM a :NullContainerMap;
+    :iriTemplate "subclasses";
     :containerMap data:subclassCM;
+.
+
+data:instancesCM a :NullContainerMap;
+    :iriTemplate "instances";
+    :nonContainerMap data:instanceCM;
 .
 
 data:classRM a :ResourceMap;
@@ -25,23 +35,24 @@ data:classRM a :ResourceMap;
 .
 
 data:instanceCM a :NonContainerMap;
-    :iriQueryTemplate "{ BIND(str(?res) as ?nres) BIND(if(contains(?nres, '#'),true,false) as ?hash) BIND(SUBSTR(?nres,STRLEN(?nres),1) as ?lstr)  BIND(if(?lstr='/',SUBSTR(?nres,0,STRLEN(?nres)),?nres) as ?fres) BIND(if(?hash,REPLACE(REPLACE(?fres,'#.*',''),'.*/','') ,REPLACE(?fres,'.*/','')) as ?template) }";
+    :iriQueryTemplate "{BIND(str(?res) as ?nres) BIND(if(contains(?nres, '#'),true,false) as ?hash) BIND(SUBSTR(?nres,STRLEN(?nres),1) as ?lstr) BIND(if(?lstr='/',SUBSTR(?nres,0,STRLEN(?nres)),?nres) as ?fres) BIND(if(?hash,REPLACE(?fres,'.*#',''),REPLACE(?fres,'.*/','')) as ?template)}";
 	:resourceMap data:instanceRM;
 .
 
 data:instanceRM a :ResourceMap;
-	:resourceQuery "{ ?res rdf:type ?{parent} . }";
+	:resourceQuery "{ ?res rdf:type ?{parent.parent} . }";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
 .
 
 data:subclassCM a :ContainerMap;
     :iriQueryTemplate "{BIND(str(?res) as ?nres) BIND(if(contains(?nres, '#'),true,false) as ?hash) BIND(SUBSTR(?nres,STRLEN(?nres),1) as ?lstr) BIND(if(?lstr='/',SUBSTR(?nres,0,STRLEN(?nres)),?nres) as ?fres) BIND(if(?hash,REPLACE(?fres,'.*#',''),REPLACE(?fres,'.*/','')) as ?template)}";
 	:resourceMap data:subClassRM;
-    :nonContainerMap data:instanceCM;
-	:containerMap data:subclassCM;
+	:containerMap data:instancesCM;
+	:containerMap data:subclassesCM;
 .
 
 data:subClassRM a :ResourceMap;
-	:resourceQuery "{ ?res rdfs:subClassOf ?{parent} .}";
+	:resourceQuery "{ ?res rdfs:subClassOf ?{parent.parent} .}";
     :graphQuery "CONSTRUCT { ?res ?p ?o . } WHERE {  ?res ?p ?o . }";
 .
+

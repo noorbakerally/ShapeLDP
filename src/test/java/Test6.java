@@ -31,7 +31,7 @@ public class Test6 {
         Evaluation.base = "";
 
         //load the design document
-        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocument.ttl");
+        File designDocument = TestUtilities.getTestResource(getClass().getSimpleName(),"DesignDocumentBBC.ttl");
         DesignDocument dd = DesignDocumentFactory.createDDFromFile(designDocument.getAbsolutePath(), null);
 
         //evaluate the design document

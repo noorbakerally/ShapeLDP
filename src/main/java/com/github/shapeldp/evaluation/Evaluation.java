@@ -7,6 +7,8 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.RDF;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -127,9 +129,9 @@ public class Evaluation {
             }
         }
 
-        if (resourceMap.getIRI().equals("http://opensensingcity.emse.fr/LDPDesign/data/datasetRM")){
+        /*if (resourceMap.getIRI().equals("http://opensensingcity.emse.fr/LDPDesign/data/subClassRM")){
             System.out.println("test");
-        }
+        }*/
 
 
         ResultSet rs = dataSource.executeResourceQuery(finalQuery);
@@ -182,6 +184,13 @@ public class Evaluation {
                     String varResult = rs.next().get("?template").toString();
                     newIRI = varResult;
                 }
+            }
+
+            //url encoding
+            try {
+                newIRI = URLEncoder.encode(newIRI, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
 
 
