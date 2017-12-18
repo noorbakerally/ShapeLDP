@@ -51,7 +51,7 @@ public class RDFFileDataSource extends DataSource {
         if (model == null){
             if (liftingRuleLocation==null){
                 model = ModelFactory.createDefaultModel();
-                model.read(location);
+                model.read(location,"TURTLE");
             } else {
                 //loading the model via the lifting ruke
                 try {

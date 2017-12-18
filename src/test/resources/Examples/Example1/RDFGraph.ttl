@@ -1,0 +1,50 @@
+@prefix ex: <http://example.com/ns#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+ex:catalog a dcat:Catalog;
+	dct:title "catalog";
+    dct:description "A example of a DCAT catalog" ;
+    dct:Language <http://id.loc.gov/vocabulary/iso639-1/en>,
+        <http://id.loc.gov/vocabulary/iso639-1/fr> ;
+    dcat:themeTaxonomy ex:themeTaxonomy;
+.
+
+ex:dataset1 a dcat:Dataset ;
+    dct:description "a first example of a DCAT datset" ;
+    dct:identifier "dataset1" ;
+    dct:language <http://id.loc.gov/vocabulary/iso639-1/fr> ;
+    dct:title "title of dataset1" ;
+    dcat:distribution ex:distribution11-csv,
+    				  ex:distribution12-json;
+.
+
+ex:distribution11-csv a dcat:Distribution ;
+    dct:description "csv distribution of dataset1";
+    dct:format "csv" ;
+    dct:license "http://opendatacommons.org/licenses/odbl/1.0/" ;
+    dcat:accessURL ex:distribution11-csv;
+    dcat:mediaType "text/csv" .
+
+ex:distribution12-json a dcat:Distribution ;
+    dct:description "json distribution of dataset1";
+    dct:format "json" ;
+    dct:license "http://opendatacommons.org/licenses/odbl/1.0/" ;
+    dcat:accessURL ex:distribution12-json;
+    dcat:mediaType "application/json" .
+
+ex:themeTaxonomy a skos:ConceptScheme ;
+    dct:title "Themes" ;
+    skos:prefLabel "A Set of data themes" ;
+    skos:topConceptOf ex:Environment, ex:Culture .
+
+ex:Environment a skos:Concept ;
+    dct:title "Environment" ;
+    skos:inScheme ex:themeTaxonomy;
+    skos:prefLabel "Environment" .
+
+ex:Culture a skos:Concept ;
+    dct:title "Culture" ;
+    skos:inScheme ex:themeTaxonomy;
+    skos:prefLabel "Culture" .

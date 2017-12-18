@@ -16,7 +16,7 @@ public class Global {
     public static PrefixMapping prefixMap;
     public static PrefixMapping dupPrefixMap;
     public static String prefixes = "";
-    public static String vocabularyPrefix = "http://opensensingcity.emse.fr/LDPDesignVocabulary/";
+    public static String vocabularyPrefix = "https://w3id.org/ldpdl/#";
     public static Model virtualModel = ModelFactory.createDefaultModel();
 
 

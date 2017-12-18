@@ -1,0 +1,13 @@
+@prefix : <https://w3id.org/ldpdl/#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix ex: <http://example.com/data#> .
+
+ex:catalogMap a :NonContainerMap;
+	:iriTemplate "catalog";
+	:resourceMap ex:resourceMap1;
+.
+
+ex:resourceMap1 a :ResourceMap;
+	:resourceQuery "{ ?res a dcat:Catalog . }";
+	:graphQuery "CONSTRUCT { ?res ?p ?o .} WHERE { ?res ?p ?o .}";
+.
