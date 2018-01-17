@@ -1,4 +1,6 @@
-# ShapeLDP
+# Important Links:
+## LDP-DL Technical Report: http://w3id.org/ldpdl/technical_report.pdf
+## LDP-DL RDF Syntax and Semantics: http://w3id.org/ldpdl/
 
 ShapeLDP generates <a href="http://opensensingcity.emse.fr/ldpdl/ldpdl.html#ldp-dataset">LDP dataset</a> from data sources using a design document as input. The design document is written in <a href="opensensingcity.emse.fr/ldpdl/ldpdl.html">LDP-DL</a>. Use `mvn clean install` to build the project. There is a command line interface having the following options:
 
