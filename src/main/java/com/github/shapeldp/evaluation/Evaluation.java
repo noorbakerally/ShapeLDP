@@ -103,6 +103,7 @@ public class Evaluation {
         List<GenID> genIDts = new ArrayList<GenID>();
 
         String resourceQuery = resourceMap.getResourceQuery();
+        resourceQuery = resourceQuery.replace("?{res}","?res");
         resourceQuery = Utilities.processRawQuery(resourceQuery,parents);
         String finalQuery = "Select DISTINCT ?res WHERE "+resourceQuery;
 
@@ -134,6 +135,7 @@ public class Evaluation {
         }*/
 
 
+
         ResultSet rs = dataSource.executeResourceQuery(finalQuery);
         while (rs.hasNext()){
             QuerySolution qs = rs.next();
@@ -150,7 +152,7 @@ public class Evaluation {
                 //get the resource graph
                 if (Global.physical) {
                     String graphQuery = resourceMap.getGraphQuery();
-                    graphQuery = graphQuery.replace("?res", "<" + resourceIRI + ">");
+                    graphQuery = graphQuery.replace("?{res}", "<" + resourceIRI + ">");
                     Model tempModel = dataSource.executeGraphQuery(graphQuery);
                     resources.get(resourceIRI).mergeModel(tempModel);
                 }
@@ -170,10 +172,11 @@ public class Evaluation {
 
             String newIRI = null;
             if (parentMap.getIRIQueryTemplate() == null){
-                newIRI = Utilities.processIRITemplate(parentMap.getIRITemplate(),currentResource,parents);
+                String iriTemplate = parentMap.getIRITemplate().replace("?{res}","res");
+                newIRI = Utilities.processIRITemplate(iriTemplate,currentResource,parents);
             } else {
                 String querysq = parentMap.getIRIQueryTemplate();
-                querysq = querysq.replace("?res", "<" + currentResourceIRI + ">");
+                querysq = querysq.replace("?{res}", "<" + currentResourceIRI + ">");
                 querysq = "SELECT DISTINCT ?template WHERE " + querysq;
                 Query gq = QueryFactory.create(Global.prefixes + querysq);
                 //gq.setPrefixMapping(Global.dupPrefixMap);
@@ -244,7 +247,7 @@ public class Evaluation {
 
 
                     String graphQuery = resourceMap.getGraphQuery();
-                    graphQuery = graphQuery.replace("?res", "<" + currentResourceIRI + ">");
+                    graphQuery = graphQuery.replace("?{res}", "<" + currentResourceIRI + ">");
                     Property cgqProperty = ResourceFactory.createProperty(Global.vocabularyPrefix + "compiledGraphQuery");
 
                     //expand the prefixes

@@ -1,0 +1,34 @@
+@prefix on:<http://opensensingcity.emse.fr/test/ontology/> .
+@prefix d:<http://opensensingcity.emse.fr/test/data/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+
+on:Animal rdfs:subClassOf on:LivingThings .
+on:Vertebrates rdfs:subClassOf on:Animal .
+on:HumanBeing rdfs:subClassOf on:Vertebrates .
+
+on:Vertebrates a owl:Class .
+on:LivingThings a owl:Class .
+on:Animal a owl:Class .
+on:HumanBeing a owl:Class .
+
+
+
+d:animal1 a on:Animal;
+	dc:title "an animal" .
+
+d:animal2 a on:Animal;
+	dc:title "an animal" .
+
+d:human1 a on:HumanBeing;
+	dc:title "a human being" .
+
+d:human2 a on:HumanBeing;
+	dc:title "a human being" .
+
+d:human2 a on:HumanBeing;
+	dc:title "a human being" .
+
+d:vertebrate a on:Vertebrates;
+	dc:title "a vertebrate" .

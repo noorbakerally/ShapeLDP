@@ -60,6 +60,7 @@ public class Utilities {
     public static String processRawQuery(String resourceQuery,List<String> parents){
         int iloc = 0;
         if (resourceQuery.contains("?{parent")){
+
             while (iloc < resourceQuery.length()){
                 int floc = resourceQuery.indexOf("?{",0);
                 int lloc = resourceQuery.indexOf("}",floc+1);
@@ -74,7 +75,15 @@ public class Utilities {
                 } else {
                     iloc = resourceQuery.length() + 1;
                 }
+
+                //if resource query no longer contains ancestor variables then exit
+                if (!resourceQuery.contains("?{parent")){
+                    break;
+                }
+
             }
+
+
         }
         return resourceQuery;
     }
