@@ -159,10 +159,10 @@ public class DesignDocumentFactory {
             String p = qs.get("?p").toString();
             String o = qs.get("?o").toString();
 
-            if (Global.getVTerm("iriTemplate").equals(p)) {
+            if (Global.getVTerm("slugTemplate").equals(p)) {
                 containerMaps.get(containerMapIRI).setIriTemplate(o);
             }
-            if (Global.getVTerm("iriQueryTemplate").equals(p)) {
+            if (Global.getVTerm("slugQueryTemplate").equals(p)) {
                 containerMaps.get(containerMapIRI).setIriQueryTemplate(o);
             }
 
@@ -183,11 +183,11 @@ public class DesignDocumentFactory {
             String p = qs.get("?p").toString();
             String o = qs.get("?o").toString();
 
-            if (Global.getVTerm("iriTemplate").equals(p)) {
+            if (Global.getVTerm("slugTemplate").equals(p)) {
                 nonContainerMaps.get(nonContainerMapIRI).setIriTemplate(o);
             }
 
-            if (Global.getVTerm("iriQueryTemplate").equals(p)) {
+            if (Global.getVTerm("slugQueryTemplate").equals(p)) {
                 nonContainerMaps.get(nonContainerMapIRI).setIriQueryTemplate(o);
             }
         }
